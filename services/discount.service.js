@@ -1,6 +1,6 @@
 const { removeField } = require("../helper/helperField");
 const Discount = require("../models/discout.model");
-const { BadRequestError } = require("../responPhrase/errorResponse");
+const { BadRequestError, ConflictError } = require("../responPhrase/errorResponse");
 
 class DiscountService {
     static async createDiscount({ body }) {
@@ -8,6 +8,8 @@ class DiscountService {
         if (new Date(discountStartDate) > new Date(discountEndDate))
             throw new BadRequestError("Ngày sử dụng discount không hợp lệ!");
         const data = removeField(body, "discountCountUsed", "discountUserAlreadyUsed", "discountIsActive");
+        const isExitsDiscount = await Discount.findOne({ discountCode: data.discountCode }).lean();
+        if (isExitsDiscount) throw new ConflictError("Dicount code đã tồn tại!");
         const newDiscount = await Discount.create(data);
         return newDiscount;
     }

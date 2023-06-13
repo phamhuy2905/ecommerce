@@ -2,7 +2,7 @@ const { removeInvalidFields } = require("../utils/nestedObj");
 const { BadRequestError } = require("../responPhrase/errorResponse");
 const { Product, Clothing, Electronic } = require("../models/product.model");
 const { Types } = require("mongoose");
-const { createInventory, updateInventory } = require("../respo/inventory.repo");
+const { createInventory, updateInventory } = require("../repositories/inventory.repo");
 class ProductFactory {
     static productRegistry = {};
     static registryProductType(type, classRef) {

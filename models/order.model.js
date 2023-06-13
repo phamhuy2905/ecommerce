@@ -36,15 +36,66 @@ const orderSchema = new Schema(
                                 discountValue: {
                                     type: Number,
                                 },
+                                discountType: {
+                                    enum: ["amount", "percen"],
+                                    type: String,
+                                    default: "amount", //percen
+                                },
                             },
                         ],
                     },
                 },
             ],
         },
-        total: {
-            type: Number,
-            default: 0,
+
+        orderShipping: {
+            type: {
+                street: {
+                    type: String,
+                },
+                ward: {
+                    type: String,
+                },
+                district: {
+                    type: String,
+                },
+                province: {
+                    type: String,
+                },
+                address: {
+                    type: String,
+                },
+                phoneNumber: {
+                    type: String,
+                },
+                nameReceiver: {
+                    type: String,
+                },
+            },
+            default: {},
+        },
+        orderPayment: {
+            type: String,
+            enum: ["Tiền mặt", "Chuyển khoản"],
+            default: "Tiền mặt",
+        },
+        orderCheckOut: {
+            type: {
+                totalPrice: {
+                    type: Number,
+                },
+                totalDiscount: {
+                    type: Number,
+                },
+                totalBalance: {
+                    type: Number,
+                },
+            },
+        },
+        orderStatus: {
+            type: String,
+            enum: ["pending", "confirmed", "shipped", "cancelled", "deliverid"],
+            default: "pending",
         },
     },
     { timestamps: true, toJSON: { virtuals: true } }

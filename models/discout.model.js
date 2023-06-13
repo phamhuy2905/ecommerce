@@ -15,6 +15,7 @@ const discountSchema = new Schema(
         discountCode: {
             type: String,
             required: true,
+            unique: true,
         },
         discountDesrciption: {
             type: String,
