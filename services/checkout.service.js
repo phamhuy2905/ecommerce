@@ -1,12 +1,15 @@
+const { del } = require("../helper/redis");
+const Order = require("../models/order.model");
 const { checkProductSever } = require("../repositories/product.repo");
 const { BadRequestError } = require("../responPhrase/errorResponse");
+const { inventoryLock } = require("./redis.service");
 
 class CheckOutSerive {
     static checkOutReview = async ({ body }) => {
         const shopOrders = body.shopOrders;
         const newShopOrders = [];
         const dataTotal = {
-            totalPirce: 0,
+            totalPrice: 0,
             totalDiscount: 0,
             totalBalance: 0,
             totalShipping: 0,
@@ -28,7 +31,7 @@ class CheckOutSerive {
                 }
             }, 0);
 
-            dataTotal.totalPirce = totalPirce;
+            dataTotal.totalPrice = totalPirce;
             dataTotal.totalDiscount = totalPirce - totalBalance;
             dataTotal.totalBalance = totalBalance;
 
@@ -44,6 +47,31 @@ class CheckOutSerive {
             dataTotal,
         };
         return data;
+    };
+
+    static createdOrder = async ({ body }) => {
+        const { newShopOrders, dataTotal, shopOrders, ...data } = await CheckOutSerive.checkOutReview({ body });
+
+        const newArrayShopOrders = newShopOrders.flatMap((item) => item.itemProducts);
+        const arr = [];
+        for (let i = 0; i < newArrayShopOrders.length; i++) {
+            const { productId, quantity } = newArrayShopOrders[i];
+            const keyLock = await inventoryLock({ productId, quantity });
+            arr.push(keyLock ? true : false);
+            if (keyLock) {
+                await del(keyLock);
+            }
+        }
+        if (arr.includes(false)) {
+            throw new BadRequestError("Có một vài sản phẩm vừa cập nhât, vui lòng qua lại giỏ hàng!");
+        }
+
+        const createdOrder = Order.create({
+            shopOrders: newShopOrders,
+            orderCheckOut: dataTotal,
+            ...data,
+        });
+        return createdOrder;
     };
 }
 

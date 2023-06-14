@@ -104,7 +104,7 @@ class ElectronicService extends ProductService {
         return newProduct;
     }
     async updateProduct(id) {
-        const electronic = await Electronic.findOneAndUpdate(id, this.productAttribute, { new: true });
+        await Electronic.findOneAndUpdate(id, this.productAttribute, { new: true });
         const product = await super.updateProduct(id);
         return product;
     }
