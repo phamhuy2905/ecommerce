@@ -31,7 +31,6 @@ const orderSchema = new Schema(
                                 },
                                 discountCode: {
                                     type: String,
-                                    required: true,
                                 },
                                 discountValue: {
                                     type: Number,

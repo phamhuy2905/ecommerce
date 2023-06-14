@@ -19,4 +19,5 @@ const dateValid = (value, helpers) => {
 module.exports = {
     objectIdSchema,
     dateValid,
+    objectId,
 };
