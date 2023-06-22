@@ -13,6 +13,8 @@ const userRouter = require("./routers/user.router");
 const productRouter = require("./routers/produc.router");
 const discountRouter = require("./routers/discount.router");
 const checkoutRouter = require("./routers/checkout.router");
+const staticRouter = require("./routers/static.route");
+const { prototype } = require("./services/user.service");
 /* router */
 
 app.use(cors());
@@ -27,11 +29,13 @@ app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/discount", discountRouter);
 app.use("/api/v1/checkout", checkoutRouter);
+app.use("/api/v1/static", staticRouter);
 /* router */
 
 app.use(globalMiddleware);
 app.use("/", (req, res, next) => {
     res.status(400).json({
+        status: 400,
         success: false,
         message: "Router not found",
     });

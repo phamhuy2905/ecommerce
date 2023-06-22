@@ -1,8 +1,10 @@
 const { removeInvalidFields } = require("../utils/nestedObj");
-const { BadRequestError } = require("../responPhrase/errorResponse");
+const { BadRequestError, ConflictError } = require("../responPhrase/errorResponse");
 const { Product, Clothing, Electronic } = require("../models/product.model");
 const { Types } = require("mongoose");
 const { createInventory, updateInventory } = require("../repositories/inventory.repo");
+const { findCategoryAndUpdate } = require("../repositories/category.repo");
+const ApiFeatured = require("../utils/apiFeatured");
 class ProductFactory {
     static productRegistry = {};
     static registryProductType(type, classRef) {
@@ -22,9 +24,44 @@ class ProductFactory {
         return new productClass(body).updateProduct(new Types.ObjectId(id));
     }
 
-    static getProduct = async () => {
-        return await Product.find().lean();
+    static getProduct = async (queryStr) => {
+        const data = await new ApiFeatured(Product.find(), queryStr).filter().sort().search().paginate();
+
+        const products = await data.query;
+        // .populate({
+        //     path: "productShop",
+        //     select: "address",
+        //     match: { address: queryStr.location },
+        // })
+        // .exec()
+        // .then((res) => {
+        //     const check = res.some((val) => val.productShop === null);
+        //     return check ? [] : res;
+        // });
+
+        return { products, page: products.length ? data.page : { itemsPerPage: 12, totalItems: 0, totalPage: 0 } };
     };
+    static async getProductDetail(id) {
+        const product = await Product.findById(id)
+            .populate({
+                path: "productShop",
+                select: "fullName address",
+            })
+            .lean();
+        if (!product) throw new BadRequestError("Không tìm thấy sản phẩm!", 404);
+        switch (product.productType) {
+            case "Electronic":
+                const electronic = await Electronic.findById(id).select("-productShop -__v").lean();
+                product.productAttribute = electronic;
+                return product;
+            case "Clothing":
+                const clothing = await Clothing.findById(id).select("-productShop -__v").lean();
+                product.productAttribute = clothing;
+                return product;
+            default:
+                return product;
+        }
+    }
 }
 
 class ProductService {
@@ -38,6 +75,7 @@ class ProductService {
         productPrice,
         productDescription,
         productAttribute,
+        productBrand,
     }) {
         this.productShop = productShop;
         this.productName = productName;
@@ -48,15 +86,20 @@ class ProductService {
         this.productPrice = productPrice;
         this.productDescription = productDescription;
         this.productAttribute = productAttribute;
+        this.productBrand = productBrand;
     }
 
     async createProduct(_id) {
         const newProduct = await Product.create({ ...this, _id });
-        await createInventory({
-            inventoryProduct: newProduct._id,
-            inventoryShop: newProduct.productShop,
-            inventoryStock: newProduct.productQuantity,
-        });
+        if (newProduct) {
+            await createInventory({
+                inventoryProduct: newProduct._id,
+                inventoryShop: newProduct.productShop,
+                inventoryStock: newProduct.productQuantity,
+            });
+
+            await findCategoryAndUpdate({ name: this.productType });
+        }
         return newProduct;
     }
 
@@ -75,6 +118,10 @@ class ProductService {
 
 class ClothingService extends ProductService {
     async createProduct() {
+        const foundProduct = await Product.findOne({ productShop: this.productShop, productName: this.productName });
+        if (foundProduct) {
+            throw new ConflictError("Tên sản phẩm đã tồn tại!");
+        }
         const newClothing = await Clothing.create({ productShop: this.productShop, ...this.productAttribute });
         if (!newClothing) throw new BadRequestError("Create clothing wrong!!");
         const newProduct = await super.createProduct(newClothing._id);
@@ -90,10 +137,17 @@ class ClothingService extends ProductService {
         const product = await super.updateProduct(id);
         return product;
     }
+    async getProductDetail(id) {
+        return await Clothing.findById(id);
+    }
 }
 
 class ElectronicService extends ProductService {
     async createProduct() {
+        const foundProduct = await Product.findOne({ productShop: this.productShop, productName: this.productName });
+        if (foundProduct) {
+            throw new ConflictError("Tên sản phẩm đã tồn tại!");
+        }
         const newElectronic = await Electronic.create({ productShop: this.productShop, ...this.productAttribute });
         if (!newElectronic) throw new BadRequestError("Create electronic wrong!!");
         const newProduct = await super.createProduct(newElectronic._id);
@@ -107,6 +161,10 @@ class ElectronicService extends ProductService {
         await Electronic.findOneAndUpdate(id, this.productAttribute, { new: true });
         const product = await super.updateProduct(id);
         return product;
+    }
+
+    async getProductDetail(id) {
+        return await Electronic.findById(id);
     }
 }
 

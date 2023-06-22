@@ -18,7 +18,10 @@ class ProductController {
         new CREATED({ data: await ProductFactory.updateProduct(value) }).send(res);
     });
     static getProduct = asyncHandel(async (req, res, next) => {
-        new OK({ data: await ProductFactory.getProduct() }).send(res);
+        new OK({ data: await ProductFactory.getProduct(req.query) }).send(res);
+    });
+    static getProductDetail = asyncHandel(async (req, res, next) => {
+        new OK({ data: await ProductFactory.getProductDetail(req.params.id) }).send(res);
     });
 }
 

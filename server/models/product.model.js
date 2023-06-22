@@ -27,6 +27,10 @@ const producSchema = new Schema(
             type: String,
             required: true,
         },
+        productBrand: {
+            type: String,
+            default: "Unknow",
+        },
         productThumbnail: {
             type: String,
             required: true,
@@ -46,6 +50,11 @@ const producSchema = new Schema(
         productDescription: {
             type: String,
             required: true,
+        },
+        ratingsAverage: {
+            type: Number,
+            default: 4.5,
+            set: (val) => Math.round(val * 10) / 10,
         },
         isPublish: {
             type: Boolean,
@@ -67,10 +76,6 @@ const clothingSchema = new Schema({
             message: "Vui lòng cung cấp shop hợp lệ",
         },
         ref: "User",
-    },
-    brand: {
-        type: String,
-        required: true,
     },
     size: {
         type: [String],
@@ -118,9 +123,11 @@ const electronicSchema = new Schema({
 });
 
 producSchema.pre("save", function (next) {
-    this.productName = slugify(this.productName, { lower: true, trim: true });
+    this.productSlug = slugify(this.productName, { lower: true, trim: true });
     next();
 });
+
+producSchema.index({ productName: "text", productSlug: "text", productType: "text" });
 
 const Product = mongoose.model("Product", producSchema);
 const Clothing = mongoose.model("Clothing", clothingSchema);

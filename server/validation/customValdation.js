@@ -16,8 +16,31 @@ const dateValid = (value, helpers) => {
     if (dateStart < now) return helpers.error("any.invalid");
 };
 
+const customMessage = (errors = [], { fieldName, max, min }) => {
+    errors.forEach((err) => {
+        console.log(err.code);
+        switch (err.code) {
+            case "string.empty":
+                err.message = `Truờng ${fieldName} không được bỏ trống!`;
+                break;
+
+            case "string.max":
+                err.message = `Trường ${fieldName} tối đa ${max} kí tự!`;
+                break;
+            case "string.min":
+                err.message = `Trường ${fieldName} tối thiểu ${min} kí tự!`;
+                break;
+            case "string.email":
+                err.message = `Trường ${fieldName} không đúng định dạng!`;
+                break;
+        }
+    });
+    return errors;
+};
+
 module.exports = {
     objectIdSchema,
     dateValid,
     objectId,
+    customMessage,
 };

@@ -2,12 +2,18 @@ class ApiFeatured {
     constructor(query, queryStr) {
         this.query = query;
         this.queryStr = queryStr;
+        this.page = {};
     }
 
-    paginate = () => {
+    paginate = async () => {
+        const limit = 12;
         const page = this.queryStr.page ?? 1;
-        const limit = 20;
-        const offset = (page - 1) * 20;
+        this.page.itemsPerPage = 12;
+
+        const countQuery = Object.create(this.query);
+        this.page.totalItems = await countQuery.countDocuments();
+        this.page.totalPage = Math.ceil(this.page.totalItems / limit);
+        const offset = (page - 1) * limit;
         this.query.find().limit(limit).skip(offset);
         return this;
     };
@@ -39,3 +45,5 @@ class ApiFeatured {
         return this;
     };
 }
+
+module.exports = ApiFeatured;

@@ -14,7 +14,7 @@ class UserService {
         const user = await User.create(body);
 
         return {
-            data: filterField(user, "fullName", "email", "_id"),
+            user: filterField(user, "fullName", "email", "_id", "role"),
         };
     };
 
@@ -56,7 +56,6 @@ class UserService {
         if (!key) throw new BadRequestError("Something wrong happend, please login!");
 
         generateCookie(res, "refreshToken", refreshToken);
-        console.log(refreshToken);
         return {
             accessToken,
         };

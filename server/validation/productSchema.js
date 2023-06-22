@@ -9,6 +9,7 @@ const createdProductSchema = Joi.object({
     productPrice: Joi.number().required().min(0),
     productDescription: Joi.string().required().min(30),
     productAttribute: Joi.object(),
+    productBrand: Joi.string().required(),
 });
 
 module.exports = {

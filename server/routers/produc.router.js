@@ -7,6 +7,7 @@ const { objectIdSchema } = require("../validation/customValdation");
 const router = express.Router();
 
 router.get("/", ProducController.getProduct);
+router.get("/:id", validator(objectIdSchema, "params"), ProducController.getProductDetail);
 router.post("/", authentication, validator(createdProductSchema), ProducController.created);
 router.patch("/:id", authentication, validator(objectIdSchema, "params"), ProducController.update);
 
