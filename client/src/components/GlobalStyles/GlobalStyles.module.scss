@@ -1,0 +1,183 @@
+// mobile xxs-extra extra small
+@mixin xxs {
+    @media (max-width: 330px) {
+        @content;
+    }
+}
+
+// mobile xs-extra small
+@mixin xs {
+    @media (max-width: 576px) {
+        @content;
+    }
+}
+
+// mobile sm-small
+@mixin sm {
+    @media (min-width: 576px) {
+        @content;
+    }
+}
+
+//  md-medium
+@mixin md {
+    @media (min-width: 768px) {
+        @content;
+    }
+}
+
+//  lg-lager
+@mixin lg {
+    @media (min-width: 992px) {
+        @content;
+    }
+}
+
+//  xl-extra lager
+@mixin xl {
+    @media (min-width: 1200px) {
+        @content;
+    }
+}
+
+//  xxl-extra extra lager
+@mixin xxl {
+    @media (min-width: 1400px) {
+        @content;
+    }
+}
+
+$cols: 12;
+$gutter: 16px;
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    // margin: -$gutter / 2;
+
+    //padding items
+    [class*="col-"] {
+        padding: calc($gutter / 2);
+    }
+
+    //xxs
+    @for $i from 1 through $cols {
+        @include xxs {
+            .col-xxs-#{$i} {
+                width: calc(100% / $cols * $i);
+            }
+        }
+    }
+
+    //xs
+    @for $i from 1 through $cols {
+        @include xs {
+            .col-xs-#{$i} {
+                width: calc(100% / $cols * $i);
+            }
+        }
+    }
+
+    //sm
+    @for $i from 1 through $cols {
+        @include sm {
+            .col-sm-#{$i} {
+                width: calc(100% / $cols * $i);
+            }
+        }
+    }
+
+    //md
+    @for $i from 1 through $cols {
+        @include md {
+            .col-md-#{$i} {
+                width: calc(100% / $cols * $i);
+            }
+        }
+    }
+
+    //lg
+    @for $i from 1 through $cols {
+        @include lg {
+            .col-lg-#{$i} {
+                width: calc(100% / $cols * $i);
+            }
+        }
+    }
+
+    //xl
+    @for $i from 1 through $cols {
+        @include xl {
+            .col-xl-#{$i} {
+                width: calc(100% / $cols * $i);
+            }
+        }
+    }
+}
+
+$colss: 16;
+$gutter: 5px;
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    // margin: -$gutter / 2;
+
+    //padding items
+    [class*="col__"] {
+        padding: calc($gutter / 2);
+    }
+    //xxs
+    @for $i from 1 through $colss {
+        @include xxs {
+            .col__xxs-#{$i} {
+                width: calc(100% / $colss * $i) !important;
+            }
+        }
+    }
+
+    //xs
+    @for $i from 1 through $colss {
+        @include xs {
+            .col__xs-#{$i} {
+                width: calc(100% / $colss * $i);
+            }
+        }
+    }
+
+    //sm
+    @for $i from 1 through $colss {
+        @include sm {
+            .col__sm-#{$i} {
+                width: calc(100% / $colss * $i);
+            }
+        }
+    }
+
+    //md
+    @for $i from 1 through $colss {
+        @include md {
+            .col__md-#{$i} {
+                width: calc(100% / $colss * $i);
+            }
+        }
+    }
+
+    //lg
+    @for $i from 1 through $colss {
+        @include lg {
+            .col__lg-#{$i} {
+                width: calc(100% / $colss * $i);
+            }
+        }
+    }
+
+    //xl
+    @for $i from 1 through $colss {
+        @include xl {
+            .col__xl-#{$i} {
+                width: calc(100% / $colss * $i);
+            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+.progress_striped {
+    background-image: linear-gradient(
+        45deg,
+        hsla(0, 0%, 100%, 0.15) 25%,
+        transparent 0,
+        transparent 50%,
+        hsla(0, 0%, 100%, 0.15) 0,
+        hsla(0, 0%, 100%, 0.15) 75%,
+        transparent 0,
+        transparent
+    );
+    background-size: 1rem 1rem;
+}
+.progress_bar {
+    flex-direction: column;
+    justify-content: center;
+    color: var(--bs-progress-bar-color);
+    text-align: center;
+    white-space: nowrap;
+    background-color: #0d6efd;
+    transition: animation_progress;
+}
+.progress_ani {
+    animation: animation_progress 1s linear infinite;
+}
+
+.wrapper_active {
+    animation: active 0.25s linear forwards;
+}
+.wrapper_inactive {
+    animation: inactive 0.25s linear forwards;
+    transform: translateX(100%);
+}
+
+@keyframes animation_progress {
+    0% {
+        background-position-x: 1rem;
+    }
+}
+
+@keyframes active {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes inactive {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}

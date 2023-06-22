@@ -1,0 +1,37 @@
+@import "../../components//GlobalStyles//GlobalStyles.module.scss";
+
+.search {
+    @include xs {
+        display: none;
+    }
+    @include sm {
+        display: none;
+    }
+    @include md {
+        width: 400px;
+    }
+    @include xl {
+        width: 600px;
+    }
+}
+
+.select {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    padding: 0 5px;
+    &::before {
+        position: absolute;
+        content: "";
+        left: -10px;
+        height: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 2px;
+        background-color: #ddd;
+    }
+}

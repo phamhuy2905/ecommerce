@@ -1,0 +1,11 @@
+.wrapper {
+    &:hover {
+        .image {
+            transform: scale(1.2);
+        }
+    }
+}
+
+.image {
+    transition: 0.25s ease-in-out;
+}

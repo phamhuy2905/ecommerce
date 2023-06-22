@@ -1,0 +1,14 @@
+.item {
+    position: relative;
+    &::before {
+        position: absolute;
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: #ddd;
+        top: 50%;
+        transform: translateY(-50%);
+        left: -15px;
+    }
+}
