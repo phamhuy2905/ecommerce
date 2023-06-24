@@ -4,8 +4,6 @@ import classNames from "classnames/bind";
 import styles from "./ProductItem.module.scss";
 import { formatCoin } from "../../utils/format";
 import { path } from "../../helpers/path.helper";
-import { useAppDispatch } from "../../redux/store";
-import { addCart } from "../../redux/cart.slice";
 const cx = classNames.bind(styles);
 
 interface PropType {
@@ -18,20 +16,6 @@ function ProductItem({ product, bg = "white", border = true }: PropType) {
     const roundAverage = Math.round(+product.ratingsAverage || 4.5);
     const loopAverage = Array(roundAverage).fill(null);
 
-    const dispatch = useAppDispatch();
-
-    const handleAddCart = () => {
-        dispatch(
-            addCart({
-                id: product._id,
-                name: product.productName,
-                price: product.productPrice,
-                quantity: 1,
-                thumbnail: product.productThumbnail,
-            })
-        );
-    };
-
     return (
         <div className={cx(` border-[1px] rounded-[10px] ${border ? "border-gray-200" : ""}`, { wrapper: true })}>
             <a
@@ -40,9 +24,10 @@ function ProductItem({ product, bg = "white", border = true }: PropType) {
                 href={`${path.client.detail}/${product._id}`}
             >
                 <img
+                    id="image"
                     className={cx("w-full h-full object-cover", { image: true })}
-                    src={product.productThumbnail}
-                    alt=""
+                    data-src={product.productThumbnail}
+                    alt="Product"
                 />
             </a>
             <div className={`px-2  flex flex-col py-3  ${border ? "border-t-[1px] border-gray-300" : ""}`}>
@@ -78,12 +63,12 @@ function ProductItem({ product, bg = "white", border = true }: PropType) {
                 </p>
                 <p className="text-blue-500 text-[16px] ">{formatCoin(product.productPrice)}</p>
                 <div className="flex items-center justify-center">
-                    <button
-                        onClick={handleAddCart}
+                    <a
+                        href={`${path.client.detail}/${product._id}`}
                         className="bg-green-400 text-white text-[14px] py-1 px-5 rounded-[12px]"
                     >
-                        Add to cart
-                    </button>
+                        Xem sản phẩm
+                    </a>
                 </div>
             </div>
         </div>

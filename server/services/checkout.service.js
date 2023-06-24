@@ -1,6 +1,8 @@
 const { del } = require("../helper/redis");
 const Order = require("../models/order.model");
-const { checkProductSever } = require("../repositories/product.repo");
+const { incrDiscount } = require("../repositories/discont.repo");
+const { incrInventory } = require("../repositories/inventory.repo");
+const { checkProductSever, incrProduct } = require("../repositories/product.repo");
 const { BadRequestError } = require("../responPhrase/errorResponse");
 const { inventoryLock } = require("./redis.service");
 
@@ -73,6 +75,35 @@ class CheckOutSerive {
         });
         return createdOrder;
     };
+
+    static async deleteProductOrderSchema({ shopId, reasonCancel, orderStatus, idOrder }) {
+        const order = await Order.findOneAndUpdate(
+            {
+                "shopOrders.shopId": shopId,
+            },
+            {
+                $set: {
+                    "shopOrders.isPublish": false,
+                    "shopOrders.reasonCancel": reasonCancel,
+                    "shopOrders.$.orderStatus": orderStatus,
+                },
+            },
+            {
+                new: true,
+            }
+        );
+        if (!order) throw new BadRequestError("Something wronggg!");
+        const itemShops = order.shopOrders.find((val) => val.shopId === shopId);
+        Promise.allSettled(
+            itemShops.itemProducts.map(async (val) => {
+                await incrInventory({ productId: val.productId, quantity: val.quantity });
+                await incrProduct({ productId: val.productId, quantity: val.quantity });
+                await incrDiscount({ discountCode: val.discountCode, userId: order.userId });
+            })
+        );
+
+        return await Order.findById(idOrder).lean();
+    }
 }
 
 module.exports = CheckOutSerive;

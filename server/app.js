@@ -17,7 +17,13 @@ const staticRouter = require("./routers/static.route");
 const { prototype } = require("./services/user.service");
 /* router */
 
-app.use(cors());
+app.use(
+    cors({
+        credentials: true,
+        origin: "http://localhost:3000",
+        optionsSuccessStatus: 200,
+    })
+);
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(compression());

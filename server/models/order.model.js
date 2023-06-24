@@ -29,6 +29,14 @@ const orderSchema = new Schema(
                                     type: Number,
                                     required: true,
                                 },
+                                size: {
+                                    type: String,
+                                    required: true,
+                                },
+                                color: {
+                                    type: String,
+                                    required: true,
+                                },
                                 discountCode: {
                                     type: String,
                                 },
@@ -42,6 +50,19 @@ const orderSchema = new Schema(
                                 },
                             },
                         ],
+                    },
+                    orderStatus: {
+                        type: String,
+                        enum: ["pending", "confirmed", "shipped", "cancel_by_user", "cancel_by_shop", "deliverid"],
+                        default: "pending",
+                    },
+                    reasonCancel: {
+                        type: String,
+                        default: "Unknow",
+                    },
+                    isPublish: {
+                        type: Boolean,
+                        default: true,
                     },
                 },
             ],
@@ -94,11 +115,6 @@ const orderSchema = new Schema(
                 },
             },
             _id: false,
-        },
-        orderStatus: {
-            type: String,
-            enum: ["pending", "confirmed", "shipped", "cancelled", "deliverid"],
-            default: "pending",
         },
     },
     { timestamps: true, toJSON: { virtuals: true } }

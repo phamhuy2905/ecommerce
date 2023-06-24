@@ -1,6 +1,6 @@
 const express = require("express");
 const ProducController = require("../controllers/product.controller");
-const { authentication } = require("../middlewares/authMiddleware");
+const { authentication, authenticationRole } = require("../middlewares/authMiddleware");
 const { createdProductSchema } = require("../validation/productSchema");
 const validator = require("../middlewares/validator");
 const { objectIdSchema } = require("../validation/customValdation");
@@ -8,7 +8,9 @@ const router = express.Router();
 
 router.get("/", ProducController.getProduct);
 router.get("/:id", validator(objectIdSchema, "params"), ProducController.getProductDetail);
-router.post("/", authentication, validator(createdProductSchema), ProducController.created);
-router.patch("/:id", authentication, validator(objectIdSchema, "params"), ProducController.update);
+
+router.use(authentication, authenticationRole(["0001", "0002"]));
+router.post("/", validator(createdProductSchema), ProducController.created);
+router.patch("/:id", validator(objectIdSchema, "params"), ProducController.update);
 
 module.exports = router;

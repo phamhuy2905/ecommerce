@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { removeItemCart } from "../../redux/cart.slice";
+import { path } from "../../helpers/path.helper";
 const cx = classNames.bind(styles);
 function MiniCart({ isHideCart, setIsHideCart }: { isHideCart: boolean; setIsHideCart: () => void }) {
     const overLayRef = useRef<HTMLDivElement>(null);
@@ -14,14 +15,24 @@ function MiniCart({ isHideCart, setIsHideCart }: { isHideCart: boolean; setIsHid
         if (e.target === overLayRef.current) setIsHideCart();
     };
 
-    const handleRemoveItemCart = (id: string) => {
-        dispatch(removeItemCart({ id }));
+    const handleRemoveItemCart = ({
+        color,
+        productId,
+        shopId,
+        size,
+    }: {
+        color: string;
+        productId: string;
+        shopId: string;
+        size: string;
+    }) => {
+        dispatch(removeItemCart({ color, productId, shopId, size }));
     };
     return (
         <div
             ref={overLayRef}
             onClick={handleHideCart}
-            className={`fixed left-0 top-0 w-full h-full  ${!isHideCart ? "z-10 h-full" : "h-0 "}`}
+            className={`fixed left-0 top-0 w-full   ${!isHideCart ? "z-10 !h-full" : "!h-0 "}`}
             style={{
                 backgroundColor: !isHideCart ? "rgba(0, 0, 0, 0.8)" : "transparent",
             }}
@@ -51,30 +62,46 @@ function MiniCart({ isHideCart, setIsHideCart }: { isHideCart: boolean; setIsHid
                         <>
                             {carts.map((val, index) => {
                                 return (
-                                    <div
-                                        key={index}
-                                        className="flex pb-3 relative w-full border-b-[1px] border-[#ddd] mb-2"
-                                    >
-                                        <div className="w-[70px] h-[75px] overflow-hidden border-[1px] border-[#ddd]">
-                                            <img
-                                                className="w-full h-full object-cover"
-                                                src={val.thumbnail}
-                                                alt="Product"
-                                            />
-                                        </div>
-                                        <div className="ml-2 ">
-                                            <p className="text-[16px] font-semibold mb-1">{val.name}</p>
-                                            <p className="text-blue-500 text-[14px] font-semibold">
-                                                ${val.price}{" "}
-                                                <span className="text-[13px] text-gray-600"> x{val.quantity}</span>
-                                            </p>
-                                        </div>
-                                        <button
-                                            onClick={() => handleRemoveItemCart(val.id)}
-                                            className="text-[15px] absolute right-2 top-[50%] translate-y-[-50%] p-2"
-                                        >
-                                            <HiOutlineXMark />
-                                        </button>
+                                    <div key={index}>
+                                        {val.itemProducts.map((value, _index) => {
+                                            return (
+                                                <div
+                                                    key={_index}
+                                                    className="flex pb-3 relative w-full border-b-[1px] border-[#ddd] mb-2"
+                                                >
+                                                    <div className="w-[70px] h-[75px] overflow-hidden border-[1px] border-[#ddd]">
+                                                        <img
+                                                            className="w-full h-full object-cover"
+                                                            src={value.thumbnail}
+                                                            alt="Product"
+                                                        />
+                                                    </div>
+                                                    <div className="ml-2 ">
+                                                        <p className="text-[16px] font-semibold mb-1">{value.name}</p>
+                                                        <p className="text-blue-500 text-[14px] font-semibold">
+                                                            ${value.price}{" "}
+                                                            <span className="text-[13px] text-gray-600">
+                                                                {" "}
+                                                                x{value.quantity}
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                    <button
+                                                        onClick={() =>
+                                                            handleRemoveItemCart({
+                                                                color: value.color,
+                                                                size: value.size,
+                                                                productId: value.id,
+                                                                shopId: val.shopId,
+                                                            })
+                                                        }
+                                                        className="text-[15px] absolute right-2 top-[50%] translate-y-[-50%] p-2"
+                                                    >
+                                                        <HiOutlineXMark />
+                                                    </button>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 );
                             })}
@@ -93,9 +120,12 @@ function MiniCart({ isHideCart, setIsHideCart }: { isHideCart: boolean; setIsHid
                     <p className="text-[15px] font-semibold">Subtotal:</p>
                     <p className="text-[16px] text-gray-600 font-semibold">${total}</p>
                 </div>
-                <button className="py-[10px] border-[1px] border-[#ddd] bg-black hover:bg-white transition-all flex justify-center items-center text-[15px] text-white mb-5 w-full mt-3 hover:text-black">
+                <a
+                    href={path.client.cart}
+                    className="py-[10px] border-[1px] border-[#ddd] bg-black hover:bg-white transition-all flex justify-center items-center text-[15px] text-white mb-5 w-full mt-3 hover:text-black"
+                >
                     View cart
-                </button>
+                </a>
                 <button className="py-[10px] border-[1px] border-[#ddd] bg-white hover:bg-black transition-all flex justify-center items-center text-[15px] text-black mb-5 w-full mt-3 hover:text-white">
                     Checkout
                 </button>

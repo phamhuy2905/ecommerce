@@ -17,9 +17,10 @@ class DiscountController {
     });
     static updatePulishDiscount = asyncHandel(async (req, res, next) => {
         const data = {
-            id: req.params.id,
-            discountShop: req.userId,
-            isPublish: req.body.isPublish,
+            idOrder: req.params.idOrder,
+            shopId: req.body.shopId,
+            reasonCancel: req.body.reasonCancel,
+            orderStatus: req.body.orderStatus,
         };
         new OK({ data: await DiscountService.updatePulishDiscount(data) }).send(res);
     });

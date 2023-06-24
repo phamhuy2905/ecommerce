@@ -17,6 +17,16 @@ class CheckOutController {
         };
         new OK({ data: await CheckOutSerive.createdOrder(data) }).send(res);
     });
+
+    static deleteProductOrderSchema = asyncHandel(async (req, res, next) => {
+        const data = {
+            idOrder: req.params.id,
+            idShops: req.idShops,
+            reasonCancel: req.reasonCancel,
+            orderStatus: orderStatus,
+        };
+        new OK({ data: await CheckOutSerive.deleteProductOrderSchema(data) }).send(res);
+    });
 }
 
 module.exports = CheckOutController;

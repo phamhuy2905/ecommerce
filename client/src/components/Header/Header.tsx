@@ -1,7 +1,4 @@
-import { motion } from "framer-motion";
-import Tippy from "@tippyjs/react";
 import { AiOutlineShoppingCart, AiOutlineHeart } from "react-icons/ai";
-import { FiChevronDown } from "react-icons/fi";
 import { BsSearch } from "react-icons/bs";
 import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
@@ -10,12 +7,15 @@ import "tippy.js/animations/perspective.css";
 import MiniCart from "../../layouts/MiniCart";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
+import SelectCategory from "../SelectCategory";
+import ActionProfile from "../ActionProfile";
 
 const cx = classNames.bind(styles);
 function Header() {
-    const [isSelect, setIsSelect] = useState(false);
     const [isHideCart, setIsHideCart] = useState<boolean>(true);
     const { carts } = useSelector((state: RootState) => state.cart);
+    console.log(carts);
+    const lenghtCart = carts.flatMap((val) => val.itemProducts).length;
     return (
         <div className="border-b-[1px] borer-[#ddd] lg:py-8 py-5 ">
             <div className="xl:max-w-7xl  mx-auto px-4  ">
@@ -40,44 +40,7 @@ function Header() {
                             placeholder="Search for products..."
                         />
                         <div>
-                            <Tippy
-                                animation="perspective"
-                                interactive
-                                trigger="click"
-                                onShow={(instance) => (isSelect ? instance.show() : instance.hide())}
-                                onHide={() => setIsSelect(false)}
-                                content={
-                                    <div className="py-2 shadow-xl z-10 bg-white rounded-[10px] min-w-[170px]">
-                                        <ul>
-                                            <li className="text-[15px] text-black font-semibold py-2 px-3 cursor-pointer">
-                                                Select Cateogory
-                                            </li>
-                                            <li className="text-[14px] text-gray-500 py-2 px-3 cursor-pointer">
-                                                Electronics
-                                            </li>
-                                            <li className="text-[14px] text-gray-500 py-2 px-3 cursor-pointer">
-                                                Fasion
-                                            </li>
-                                            <li className="text-[14px] text-gray-500 py-2 px-3 cursor-pointer">
-                                                Beauty
-                                            </li>
-                                            <li className="text-[14px] text-gray-500 py-2 px-3 cursor-pointer">
-                                                Jewelry
-                                            </li>
-                                        </ul>
-                                    </div>
-                                }
-                            >
-                                <div
-                                    onClick={() => setIsSelect(!isSelect)}
-                                    className={cx("select-none", { select: true })}
-                                >
-                                    <p className="text-[15px]  text-gray-600 mr-3">Select Category</p>
-                                    <motion.div animate={{ rotate: isSelect ? -180 : 0 }}>
-                                        <FiChevronDown className="text-[18px] text-gray-600 " />
-                                    </motion.div>
-                                </div>
-                            </Tippy>
+                            <SelectCategory />
                         </div>
                         <button className="bg-blue-500 px-4 py-3 md:py-2">
                             <BsSearch className="text-white text-[28px] md:text-[20px]" />
@@ -92,25 +55,14 @@ function Header() {
                         </p>
                         <p onClick={() => setIsHideCart(!isHideCart)} className="relative mx-10 cursor-pointer">
                             <span className="absolute top-[-3px] right-[-3px] w-[15px] h-[15px] bg-blue-500 text-white rounded-full flex items-center justify-center">
-                                {carts.length}
+                                {lenghtCart}
                             </span>
                             <AiOutlineShoppingCart className="text-blue-900 text-[30px]" />
                         </p>
-                        <div className="w-[35px] h-[35px] overflow-hidden rounded-full border-[1px] border-gray-400 cursor-pointer">
-                            <img
-                                className="w-full h-full object-cover"
-                                src="https://avatars.githubusercontent.com/u/107147020?v=4"
-                                alt="Avatar"
-                            />
-                        </div>
+                        <ActionProfile />
                     </div>
                 </div>
             </div>
-            {/* {!isHideCart ? (
-                <MiniCart isHideCart={isHideCart} setIsHideCart={() => setIsHideCart(!isHideCart)} />
-            ) : (
-                <></>
-            )} */}
             <MiniCart isHideCart={isHideCart} setIsHideCart={() => setIsHideCart(!isHideCart)} />
         </div>
     );

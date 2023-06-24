@@ -43,6 +43,7 @@ export interface ProductTypeDetaill extends ProductType {
         size?: string[];
         material?: string;
         special?: any;
+        color?: string[];
     };
 }
 

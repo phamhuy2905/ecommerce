@@ -21,7 +21,20 @@ const loginUserChema = Joi.object({
         .error((error) => customMessage(error, { fieldName: "password", min: 8 })),
 });
 
+const registerShop = Joi.object({
+    address: Joi.string()
+        .required()
+        .error((error) => customMessage(error, { fieldName: "New address", min: 8 })),
+    address2: Joi.string()
+        .required()
+        .error((error) => customMessage(error, { fieldName: "New address2", min: 8 })),
+    phoneNumber: Joi.number()
+        .required()
+        .error((error) => customMessage(error, { fieldName: "New phoneNumber" })),
+});
+
 module.exports = {
     registerUserChema,
     loginUserChema,
+    registerShop,
 };

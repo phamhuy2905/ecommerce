@@ -10,6 +10,12 @@ const createdProductSchema = Joi.object({
     productDescription: Joi.string().required().min(30),
     productAttribute: Joi.object(),
     productBrand: Joi.string().required(),
+    productAttribute: Joi.object({
+        manufacture: Joi.string(),
+        size: Joi.array().items(Joi.string()).min(1),
+        color: Joi.array().items(Joi.string()).min(1),
+        material: Joi.string().required(),
+    }).required(),
 });
 
 module.exports = {

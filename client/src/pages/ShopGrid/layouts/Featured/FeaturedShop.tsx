@@ -2,13 +2,14 @@ import { BsList } from "react-icons/bs";
 import { TfiViewGrid } from "react-icons/tfi";
 import ProductGrid from "../ProductGrid";
 import SortByPrice from "../../components/SortByPrice";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getProduct } from "../../../../apis/product.api";
 import { useQuery } from "react-query";
 import { FilterProductType } from "../../../../types/product.type";
 import { isUndefined, omitBy } from "lodash";
 import { searchParams } from "../../../../utils/query";
 import Pagination from "../../../../components/Pagination";
+import { observer } from "../../../../utils/observer";
 function FeaturedShop() {
     const [isGrid, setIsGrid] = useState(true);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -39,6 +40,13 @@ function FeaturedShop() {
             inline: "start",
         });
     };
+
+    useEffect(() => {
+        const images = document.querySelectorAll("#image");
+        images.forEach((image) => {
+            observer.observe(image);
+        });
+    }, [data, isGrid]);
     return (
         <div className="px-6" ref={scrollRef}>
             <div className="flex items-center justify-between">

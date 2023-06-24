@@ -13,9 +13,10 @@ function ProductRow({ product }: { product: ProductType }) {
                 className={`px-2  w-[260xp] h-[315px] overflow-hidden relative cursor-pointer bg-[#f2f3f5] rounded-[10px]`}
             >
                 <img
+                    id="image"
                     className={cx("w-full h-full object-cover", { image: true })}
-                    src={product.productThumbnail}
                     alt="Product"
+                    data-src={product.productThumbnail}
                 />
             </div>
             <div
@@ -26,10 +27,10 @@ function ProductRow({ product }: { product: ProductType }) {
                 <h4 className="text-[17px] text-gray-800 my-2">{product.productName}</h4>
                 <p className=" mb-5 relative">
                     {loopAverage.map((_, index) => {
-                        const percen =
-                            (index + 1) / product.ratingsAverage <= 1
-                                ? 100
-                                : (product.ratingsAverage - Math.floor(product.ratingsAverage)) * 100;
+                        // const percen =
+                        //     (index + 1) / product.ratingsAverage <= 1
+                        //         ? 100
+                        //         : (product.ratingsAverage - Math.floor(product.ratingsAverage)) * 100;
 
                         return (
                             <span

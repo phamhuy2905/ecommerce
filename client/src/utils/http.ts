@@ -1,4 +1,4 @@
-import axios, { type AxiosInstance } from "axios";
+import axios, { AxiosResponse, type AxiosInstance } from "axios";
 import { AuthResponseLogin, UserType } from "../types/auth.type";
 import {
     getProfileLocal,
@@ -8,13 +8,16 @@ import {
     saveProfileLocal,
     saveTokenLocal,
 } from "../helpers/local.helper";
+import { refreshToken } from "../apis/auth.api";
 
 class http {
     instance: AxiosInstance;
     private accessToken: string;
     profile: UserType;
+    refreshToken: Promise<AxiosResponse<AuthResponseLogin, any>> | null;
 
     constructor() {
+        this.refreshToken = null;
         this.accessToken = getTokenLocal();
         this.profile = getProfileLocal();
         this.instance = axios.create({
@@ -22,6 +25,7 @@ class http {
             headers: {
                 "Content-Type": "application/json",
             },
+            withCredentials: true,
         });
         this.instance.interceptors.response.use(
             (response) => {
@@ -39,7 +43,20 @@ class http {
                 }
                 return response;
             },
-            function (error) {
+            (error) => {
+                if (error.response.data.status === 401 && error.response.data.message === "TokenExpiredError") {
+                    this.refreshToken = this.refreshToken ? this.refreshToken : refreshToken();
+                    this.refreshToken
+                        .then((res) => {
+                            this.accessToken = res.data.data.accessToken;
+                            this.profile = res.data.data.user;
+                            error.response.config.Authorization = this.accessToken;
+                            this.instance(error.response.config);
+                        })
+                        .catch((err) => console.log(err))
+                        .finally(() => (this.refreshToken = null));
+                    return;
+                }
                 return Promise.reject(error);
             }
         );
@@ -50,6 +67,7 @@ class http {
                 }
                 return config;
             },
+
             (error) => {
                 return Promise.reject(error);
             }

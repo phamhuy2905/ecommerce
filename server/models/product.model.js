@@ -79,11 +79,23 @@ const clothingSchema = new Schema({
     },
     size: {
         type: [String],
-        default: [],
+        required: true,
     },
     material: {
         type: String,
         required: true,
+    },
+    color: {
+        type: [String],
+        required: true,
+    },
+    special: {
+        type: [
+            {
+                k: { type: String },
+                v: { type: String },
+            },
+        ],
     },
 });
 
@@ -102,14 +114,17 @@ const electronicSchema = new Schema({
     },
     manufacture: {
         type: String,
-        required: true,
     },
     size: {
         type: [String],
-        default: [],
+        required: true,
     },
     material: {
         type: String,
+        required: true,
+    },
+    color: {
+        type: [String],
         required: true,
     },
     special: {

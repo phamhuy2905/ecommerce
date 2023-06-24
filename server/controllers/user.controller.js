@@ -8,6 +8,15 @@ class UserController {
     static login = asyncHandel(async (req, res, next) => {
         new OK({ message: "Đăng nhập thành công", data: await UserService.login(req, res, next) }).send(res);
     });
+    static logout = asyncHandel(async (req, res, next) => {
+        new OK({ message: "Đăng xuất thành công", data: await UserService.logout(req, res, next) }).send(res);
+    });
+    static registerShop = asyncHandel(async (req, res, next) => {
+        new OK({
+            message: "Đăng kí làm người bán thành công",
+            data: await UserService.registerShop(req, res, next),
+        }).send(res);
+    });
 
     static handelRefreshToken = asyncHandel(async (req, res, next) => {
         new OK({ data: await UserService.handelRefreshToken(req, res, next) }).send(res);

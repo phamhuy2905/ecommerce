@@ -5,10 +5,13 @@ const Home = lazy(() => import("../pages/Home"));
 const Login = lazy(() => import("../pages/Login"));
 const Register = lazy(() => import("../pages/Register"));
 const Profile = lazy(() => import("../pages/Profile"));
+const ShopGrid = lazy(() => import("../pages/ShopGrid"));
+const ProductDetail = lazy(() => import("../pages/ProductDetail"));
+const Cart = lazy(() => import("../pages/Cart"));
+
 import DefaultLayout from "../layouts/DefaultLayout";
 import { useAuthContext } from "../context/auth.context";
-import ShopGrid from "../pages/ShopGrid";
-import ProductDetail from "../pages/ProductDetail";
+
 function ProtectedRoute() {
     const { isAuthenticated } = useAuthContext();
     return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
@@ -45,6 +48,15 @@ function useRoutesElement() {
             element: (
                 <DefaultLayout>
                     <ProductDetail />
+                </DefaultLayout>
+            ),
+        },
+        {
+            path: "/cart",
+            index: true,
+            element: (
+                <DefaultLayout>
+                    <Cart />
                 </DefaultLayout>
             ),
         },

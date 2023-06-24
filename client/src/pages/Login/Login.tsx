@@ -13,7 +13,7 @@ import { useAuthContext } from "../../context/auth.context";
 import Button from "../../components/Button";
 
 function Login() {
-    const { setIsAuthenticated } = useAuthContext();
+    const { setIsAuthenticated, setProfile } = useAuthContext();
     const navigate = useNavigate();
     const location = useLocation();
     const {
@@ -28,10 +28,10 @@ function Login() {
     });
     const rules = getRules();
     const onSubmit = handleSubmit((data) => {
-        toast.loading("loading");
         mutate(data, {
-            onSuccess: () => {
+            onSuccess: (res) => {
                 setIsAuthenticated(true);
+                setProfile(res.data.data.user);
                 navigate("/");
             },
             onError: (err) => {
@@ -42,7 +42,6 @@ function Login() {
             },
         });
     });
-    console.log(isLoading);
 
     useEffect(() => {
         if (location.state) {

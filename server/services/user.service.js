@@ -4,6 +4,7 @@ const User = require("../models/user.model");
 const { createSecretKey, createTokenPair } = require("../helper/helperToken");
 const { createKeyToken, findKeyByUserIdAndDelete, findKeyByUserIdAndUpdate } = require("./keyToken.service");
 const { generateCookie } = require("../helper/helperCookie");
+const KeyToken = require("../models/keyToken.model");
 
 class UserService {
     static register = async (req, res, next) => {
@@ -55,15 +56,33 @@ class UserService {
         const key = await findKeyByUserIdAndUpdate({ userId: keyToken.userId, refreshToken, refreshTokenOld: ref });
         if (!key) throw new BadRequestError("Something wrong happend, please login!");
 
+        const user = await User.findById(keyToken.userId).lean();
         generateCookie(res, "refreshToken", refreshToken);
         return {
+            user,
             accessToken,
         };
     };
 
-    static logout = (res) => {
+    static logout = async (req, res, next) => {
+        const foundKeyToken = await KeyToken.findOneAndDelete({ userId: req.userId });
+        if (!foundKeyToken) throw new UnAuthorization();
         res.clearCookie("refreshToken");
         return;
+    };
+
+    static registerShop = async (req, res, next) => {
+        const shop = await User.findByIdAndUpdate(
+            req.userId,
+            {
+                address: req.address,
+                address2: req.address2,
+                phoneNumber: req.phoneNumber,
+                role: "0002",
+            },
+            { upsert: true, new: true }
+        );
+        return shop;
     };
 }
 

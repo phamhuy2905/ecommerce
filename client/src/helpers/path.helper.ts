@@ -5,6 +5,7 @@ export const path = {
         login: "/login",
         register: "/register",
         detail: "/detail",
+        cart: "/cart",
     },
     api: {
         static: "/static",
