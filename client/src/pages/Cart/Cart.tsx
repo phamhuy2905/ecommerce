@@ -2,29 +2,37 @@ import { useSelector } from "react-redux";
 import ItemCart from "./components/ItemCart";
 import { RootState } from "../../redux/store";
 import { formatCoin } from "../../utils/format";
+import HeaderItemCart from "./components/HeaderItemCart";
+import { Link } from "react-router-dom";
+import { omit } from "lodash";
+import { useMemo } from "react";
+
 function Cart() {
-    const { carts, total } = useSelector((state: RootState) => state.cart);
+    const { carts, metaTotal } = useSelector((state: RootState) => state.cart);
+    const data = useMemo(() => {
+        const shopOrders = carts
+            .map((item) => {
+                const itemProducts = item.itemProducts.filter((val) => val.isChecked);
+                if (itemProducts.length)
+                    return {
+                        shopId: item.shopId,
+                        itemProducts: itemProducts.map((val) =>
+                            omit({ productId: val.id, price: val.price, quantity: val.quantity })
+                        ),
+                    };
+            })
+            .filter((val) => val);
+        return shopOrders.length ? { useId: "123asd", shopOrders } : null;
+    }, [carts]);
     return (
-        <div className="py-10 bg-[#f5f5f5]">
+        <div className="bg-[#f5f5f5] py-10">
             <div className="content">
-                <h2 className="text-[30px] font-semibold mb-5">Giỏ hàng</h2>
+                <h2 className="mb-5 text-[30px] font-semibold">Giỏ hàng</h2>
                 <div className="flex flex-col">
-                    <div className="px-3 py-3 grid grid-cols-2 bg-white my-3">
-                        <div className="flex items-center">
-                            <input type="checkbox" />
-                            <div className="mx-3">
-                                <p className="ml-3 text-[15px] text-gray-500">Sản Phẩm</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <p className="ml-3 text-[15px] text-gray-500">Đơn Giá</p>
-                            <p className="ml-3 text-[15px] text-gray-500">Số Lượng</p>
-                            <p className="ml-3 text-[15px] text-gray-500">Số Tiền</p>
-                        </div>
-                    </div>
+                    <HeaderItemCart />
                     {carts.map((val, index) => {
                         return (
-                            <div key={index} className="px-3 py-3  bg-white my-3">
+                            <div key={index} className="my-3 bg-white px-3 py-3">
                                 <h4 className="my-2 text-[16px]">
                                     Tên shop: <span className="ml-2 text-[16px] font-light">{val.shopName}</span>
                                 </h4>
@@ -44,10 +52,26 @@ function Cart() {
                         );
                     })}
                 </div>
-                <h3 className="text-[18px] text-gray-500 flex justify-between mt-3">
+                <h3 className="mt-3 flex justify-between text-[18px] text-gray-500">
                     Tổng tiền:
-                    <span className="text-[24px] ml-3">{formatCoin(total)}</span>
+                    <span className="ml-3 text-[24px]">{formatCoin(metaTotal)}</span>
                 </h3>
+                <div className="mt-6 flex justify-end">
+                    {data ? (
+                        <Link
+                            to={{
+                                pathname: `/checkout/${encodeURIComponent(btoa(JSON.stringify(data)))}`,
+                            }}
+                            className="rounded-[7px] bg-blue-500 px-5 py-2 text-right text-[15px] text-white"
+                        >
+                            Thanh toán
+                        </Link>
+                    ) : (
+                        <button className="rounded-[7px] bg-red-500 px-5 py-2 text-right text-[15px] text-white">
+                            Chưa có sản phẩm nào được chọn
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );

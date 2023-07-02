@@ -14,7 +14,6 @@ const productRouter = require("./routers/produc.router");
 const discountRouter = require("./routers/discount.router");
 const checkoutRouter = require("./routers/checkout.router");
 const staticRouter = require("./routers/static.route");
-const { prototype } = require("./services/user.service");
 /* router */
 
 app.use(
@@ -24,6 +23,7 @@ app.use(
         optionsSuccessStatus: 200,
     })
 );
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(compression());

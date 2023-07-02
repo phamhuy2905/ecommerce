@@ -11,6 +11,8 @@ const Cart = lazy(() => import("../pages/Cart"));
 
 import DefaultLayout from "../layouts/DefaultLayout";
 import { useAuthContext } from "../context/auth.context";
+import CheckOut from "../pages/CheckOut";
+import Test from "../pages/Test";
 
 function ProtectedRoute() {
     const { isAuthenticated } = useAuthContext();
@@ -30,6 +32,15 @@ function useRoutesElement() {
             element: (
                 <DefaultLayout>
                     <Home />
+                </DefaultLayout>
+            ),
+        },
+        {
+            path: "/test",
+            index: true,
+            element: (
+                <DefaultLayout>
+                    <Test />
                 </DefaultLayout>
             ),
         },
@@ -69,6 +80,14 @@ function useRoutesElement() {
                     element: (
                         <DefaultLayout>
                             <Profile />
+                        </DefaultLayout>
+                    ),
+                },
+                {
+                    path: "/checkout/:state",
+                    element: (
+                        <DefaultLayout>
+                            <CheckOut />
                         </DefaultLayout>
                     ),
                 },

@@ -32,7 +32,6 @@ class UserService {
 
         const keyToken = await createKeyToken({
             userId: user._id,
-            refreshToken,
             publicKey,
             privateKey,
         });
@@ -44,19 +43,18 @@ class UserService {
         };
     };
 
-    static handelRefreshToken = async ({ keyToken, refreshToken: ref }, res, next) => {
-        const foundTokenUsed = keyToken.refreshTokenUsed.includes(ref);
+    static handelRefreshToken = async ({ keyToken, refreshTokenOld, user }, res, next) => {
+        const foundTokenUsed = keyToken.refreshTokenUsed.includes(refreshTokenOld);
         if (foundTokenUsed) {
             await findKeyByUserIdAndDelete(keyToken.userId);
-            throw new BadRequestError("Something wrong happend, please login!");
+            throw new UnAuthorization("Something wrong happend, please login!");
         }
 
         const { accessToken, refreshToken } = createTokenPair(keyToken.userId, keyToken.publicKey, keyToken.privateKey);
 
-        const key = await findKeyByUserIdAndUpdate({ userId: keyToken.userId, refreshToken, refreshTokenOld: ref });
-        if (!key) throw new BadRequestError("Something wrong happend, please login!");
+        const key = await findKeyByUserIdAndUpdate({ userId: keyToken.userId, refreshTokenOld });
+        if (!key) throw new UnAuthorization("Something wrong happend, please login!");
 
-        const user = await User.findById(keyToken.userId).lean();
         generateCookie(res, "refreshToken", refreshToken);
         return {
             user,

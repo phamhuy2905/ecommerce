@@ -56,6 +56,11 @@ class http {
                         .catch((err) => console.log(err))
                         .finally(() => (this.refreshToken = null));
                     return;
+                } else if (error.response.data.status === 401) {
+                    this.accessToken = "";
+                    remmoveTokenLocal();
+                    remmoveProfileLocal();
+                    window.location.reload();
                 }
                 return Promise.reject(error);
             }

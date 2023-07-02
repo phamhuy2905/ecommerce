@@ -1,4 +1,5 @@
 import { UserType } from "../types/auth.type";
+import { initTialStateType } from "../types/slice/cart.type";
 
 const saveTokenLocal = (accessToken: string) => {
     localStorage.setItem("accessToken", accessToken);
@@ -24,4 +25,26 @@ const remmoveProfileLocal = () => {
     return localStorage.removeItem("profile");
 };
 
-export { saveTokenLocal, getTokenLocal, remmoveTokenLocal, saveProfileLocal, getProfileLocal, remmoveProfileLocal };
+const getLocalCart = (): initTialStateType => {
+    const carts = localStorage.getItem("carts") || "0";
+    return JSON.parse(carts) || { carts: [], total: 0, metaTotal: 0, cartMetas: [] };
+};
+
+const setLocalCart = (carts: initTialStateType) => {
+    return localStorage.setItem("carts", JSON.stringify(carts));
+};
+const clearLocalCart = () => {
+    localStorage.removeItem("carts");
+};
+
+export {
+    saveTokenLocal,
+    getTokenLocal,
+    remmoveTokenLocal,
+    saveProfileLocal,
+    getProfileLocal,
+    remmoveProfileLocal,
+    getLocalCart,
+    setLocalCart,
+    clearLocalCart,
+};

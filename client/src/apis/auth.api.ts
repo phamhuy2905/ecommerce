@@ -14,6 +14,6 @@ export const refreshToken = async () => {
     return await http.instance.post<AuthResponseLogin>("auth/refreshToken");
 };
 
-export const authLogout = async () => {
-    return await http.instance.post<SuccessType>("auth/logout");
+export const authLogout = async (userId: string) => {
+    return await http.instance.post<SuccessType>("auth/logout", { userId });
 };

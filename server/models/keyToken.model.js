@@ -7,10 +7,6 @@ const keyTokenSchema = new Schema(
             type: mongoose.Types.ObjectId,
             required: true,
         },
-        refreshToken: {
-            type: String,
-            required: true,
-        },
         publicKey: {
             type: String,
             required: true,

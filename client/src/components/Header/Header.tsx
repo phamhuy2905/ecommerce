@@ -14,7 +14,6 @@ const cx = classNames.bind(styles);
 function Header() {
     const [isHideCart, setIsHideCart] = useState<boolean>(true);
     const { carts } = useSelector((state: RootState) => state.cart);
-    console.log(carts);
     const lenghtCart = carts.flatMap((val) => val.itemProducts).length;
     return (
         <div className="border-b-[1px] borer-[#ddd] lg:py-8 py-5 ">

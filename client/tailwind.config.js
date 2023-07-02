@@ -4,7 +4,7 @@ export default {
     theme: {
         extend: {},
     },
-    plugins: [],
+    plugins: [require("prettier-plugin-tailwindcss")],
     screens: {
         xs: "576px",
         sm: "640px",

@@ -20,6 +20,7 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
                     price: product.productPrice,
                     thumbnail: product.productThumbnail,
                     color: "Unknow",
+                    isChecked: false,
                 },
                 shopId: product.productShop._id,
                 shopName: product.productShop.fullName,
@@ -30,7 +31,7 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
     };
     return (
         <>
-            <p className="text-[16px] mb-4">
+            <p className="mb-4 text-[16px]">
                 <span className="mr-2"> Màu hiện có:</span>
                 {product?.productAttribute.color?.length ? (
                     <>
@@ -38,7 +39,7 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
                             return (
                                 <span
                                     key={index}
-                                    className="text-[15px] px-2 py-2 mr-3 border-[1px] border-gray-200 cursor-pointer"
+                                    className="mr-3 cursor-pointer border-[1px] border-gray-200 px-2 py-2 text-[15px]"
                                 >
                                     {val}
                                 </span>
@@ -49,15 +50,15 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
                     <span>Unkown</span>
                 )}
             </p>
-            <p className="text-[16px] mb-4 flex items-center">
+            <p className="mb-4 flex items-center text-[16px]">
                 <span className="mr-2">Size hiện có:</span>
                 {product?.productAttribute.size?.map((val, index) => {
                     return (
                         <span
                             onClick={() => setSize(val)}
                             key={index}
-                            className={`text-[18px] font-semibold w-[35px] h-[35px] text-center leading-[35px] mr-3  cursor-pointer  ${
-                                size === val ? "border-blue-400 border-[2px]" : "border-gray-200 border-[1px]"
+                            className={`mr-3 h-[35px] w-[35px] cursor-pointer text-center text-[18px] font-semibold  leading-[35px]  ${
+                                size === val ? "border-[2px] border-blue-400" : "border-[1px] border-gray-200"
                             }`}
                         >
                             {val}
@@ -66,27 +67,27 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
                 })}
                 <span className="ml-3 text-[14px] text-red-500">{"Vui lòng chọn size"}</span>
             </p>
-            <div className="flex items-center mb-4 ">
+            <div className="mb-4 flex items-center ">
                 <div className="flex items-center bg-[#ddd]">
                     <button
                         onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
-                        className="text-[20px] text-gray-600 px-2 py-2"
+                        className="px-2 py-2 text-[20px] text-gray-600"
                     >
                         <AiOutlineMinus />
                     </button>
-                    <span className="text-[14px] text-gray-600 mx-2">{quantity}</span>
-                    <button onClick={() => setQuantity(quantity + 1)} className="text-[20px] text-gray-600 px-2 py-2">
+                    <span className="mx-2 text-[14px] text-gray-600">{quantity}</span>
+                    <button onClick={() => setQuantity(quantity + 1)} className="px-2 py-2 text-[20px] text-gray-600">
                         <AiOutlinePlus />
                     </button>
                 </div>
                 <button
                     onClick={addToCart}
-                    className="flex-1 ml-5 py-2 border-[1px] border-gray-400   bg-white hover:bg-black transition-all flex justify-center items-center text-[15px] text-black hover:text-white "
+                    className="ml-5 flex flex-1 items-center justify-center   border-[1px] border-gray-400 bg-white py-2 text-[15px] text-black transition-all hover:bg-black hover:text-white "
                 >
                     Thêm vào giỏ hàng
                 </button>
             </div>
-            <button className="py-[10px] border-[1px] border-[#ddd] bg-blue-500 hover:bg-black transition-all flex justify-center items-center text-[15px] text-white mb-5">
+            <button className="mb-5 flex items-center justify-center border-[1px] border-[#ddd] bg-blue-500 py-[10px] text-[15px] text-white transition-all hover:bg-black">
                 Mua ngay
             </button>
             <Toaster />
