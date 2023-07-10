@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { dateValid } = require("./customValdation");
+const { dateValid, objectId } = require("./customValdation");
 
 const createDiscount = Joi.object({
     discountCode: Joi.string().required(),
@@ -37,10 +37,15 @@ const updatePublishDiscount = Joi.object({
     isPublish: Joi.boolean(),
 });
 
+const getDiscount = Joi.object({
+    discountShop: Joi.custom(objectId).required(),
+});
+
 module.exports = {
     createDiscount,
     updateDiscount,
     updatePublishDiscount,
+    getDiscount,
 };
 
 // const test = {

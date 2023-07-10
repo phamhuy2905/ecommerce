@@ -94,6 +94,21 @@ const cartSlice = createSlice({
             );
         },
 
+        checkedAllCart(state) {
+            const check = state.carts.flatMap((val) => val.itemProducts).every((val) => val.isChecked);
+            if (check) {
+                state.carts.forEach((val) => val.itemProducts.forEach((item) => (item.isChecked = false)));
+            } else {
+                state.carts.forEach((val) => val.itemProducts.forEach((item) => (item.isChecked = true)));
+            }
+
+            const products = state.carts.flatMap((val) => val.itemProducts);
+            state.metaTotal = products.reduce(
+                (acc, curr) => acc + (curr.isChecked ? curr.quantity * curr.price : 0),
+                0
+            );
+        },
+
         changeQuantity(
             state,
             action: PayloadAction<Pick<CartProductType, "id" | "size" | "color"> & { type: "incr" | "decr" }>
@@ -115,6 +130,6 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addCart, removeItemCart, checkedCart, changeQuantity } = cartSlice.actions;
+export const { addCart, removeItemCart, checkedCart, changeQuantity, checkedAllCart } = cartSlice.actions;
 const cartReducer = cartSlice.reducer;
 export default cartReducer;

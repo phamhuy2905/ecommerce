@@ -11,7 +11,7 @@ function ActionProfile() {
     const navigate = useNavigate();
     const { mutate } = useMutation({
         mutationKey: ["logout"],
-        mutationFn: async () => profile?._id && authLogout(profile._id),
+        mutationFn: authLogout,
         onSuccess: () => {
             setIsAuthenticated(false);
             setProfile(null);

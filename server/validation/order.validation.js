@@ -10,8 +10,8 @@ const checkOutSchema = Joi.object({
                     Joi.object({
                         productId: Joi.custom(objectId),
                         price: Joi.number().required(),
-                        size: Joi.string().required(),
-                        color: Joi.string().required(),
+                        size: Joi.allow(Joi.string()),
+                        color: Joi.allow(Joi.string()),
                         quantity: Joi.number().required(),
                         discountCode: Joi.string(),
                     })
@@ -26,7 +26,7 @@ const checkOutSchema = Joi.object({
         address: Joi.string(),
         phoneNumber: Joi.number(),
         nameReceiver: Joi.string(),
-    }).required(),
+    }),
 });
 
 const deleteProductOrderSchema = Joi.object({

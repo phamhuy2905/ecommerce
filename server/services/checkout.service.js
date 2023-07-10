@@ -20,7 +20,6 @@ class CheckOutSerive {
             const { shopId, itemProducts } = shopOrders[i];
             const checkProduct = await checkProductSever(itemProducts, shopId);
             if (!checkProduct.length) throw new BadRequestError("Order wrong!");
-
             const totalPirce = checkProduct.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
 
             const totalBalance = checkProduct.reduce((acc, curr) => {

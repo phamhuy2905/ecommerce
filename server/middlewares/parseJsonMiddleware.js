@@ -1,3 +1,5 @@
+const { saveOneImage } = require("../utils/saveImage");
+
 const checkType = (value) => Object.prototype.toString.call(value).slice(8, -1);
 
 const parseJson = (body) => {
@@ -24,6 +26,7 @@ const parseJson = (body) => {
 
 const parseJsonMiddleware = (req, res, next) => {
     const data = parseJson(req.body);
+    // saveOneImage({ width: 300, height: 300, file: req.files[0], name: "test", path: "test" });
     req.body = data;
     next();
 };

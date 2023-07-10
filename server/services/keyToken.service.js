@@ -1,27 +1,39 @@
 const KeyToken = require("../models/keyToken.model");
 
-const createKeyToken = async ({ userId, publicKey, privateKey }) => {
+const createKeyToken = async ({ userId, publicKey, privateKey, refreshToken }) => {
     const filter = { userId },
-        update = { publicKey, privateKey, refreshTokenUsed: [] },
+        update = { publicKey, privateKey, $addToSet: { refreshTokens: refreshToken } },
         options = { new: true, upsert: true };
     const keyToken = await KeyToken.findOneAndUpdate(filter, update, options);
     return keyToken ? keyToken : null;
 };
 
-const findKeyByUserIdAndDelete = async (id) => {
-    await KeyToken.findOneAndDelete({ userId: id });
+const findKeyByUserIdAndDelete = async (userId) => {
+    await KeyToken.findOneAndDelete({ userId });
 };
-
-const findKeyByUserIdAndUpdate = async ({ userId, refreshTokenOld }) => {
+const findByUserIdAndPull = async ({ userId, refreshToken }) => {
+    console.log(refreshToken);
+    return await KeyToken.findOneAndUpdate({ userId }, { $pull: { refreshTokens: refreshToken } }, { new: true });
+};
+const findKeyByUserIdAndUpdate = async ({ userId, refreshTokenOld, refreshTokenNew }) => {
     const filter = { userId },
-        update = { $addToSet: { refreshTokenUsed: refreshTokenOld } },
+        update = {
+            $addToSet: { refreshTokenUsed: refreshTokenOld },
+            $pull: { refreshTokens: refreshTokenOld },
+        },
         options = { new: true, upsert: true };
-    const keyToken = await KeyToken.findOneAndUpdate(filter, update, options);
+    await KeyToken.findOneAndUpdate(filter, update, options);
+    const keyToken = await KeyToken.findOneAndUpdate(filter, { $push: { refreshTokens: refreshTokenNew } }, options);
     return keyToken ? keyToken : null;
 };
 
+const findKeyTokenByRefreshToken = async ({ refreshToken }) => {
+    return await KeyToken.findOne({ refreshTokens: { $in: [refreshToken] } });
+};
 module.exports = {
     createKeyToken,
     findKeyByUserIdAndDelete,
     findKeyByUserIdAndUpdate,
+    findKeyTokenByRefreshToken,
+    findByUserIdAndPull,
 };

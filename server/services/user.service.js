@@ -2,7 +2,12 @@ const { ConflictError, BadRequestError, UnAuthorization } = require("../responPh
 const { removeField, filterField } = require("../helper/helperField");
 const User = require("../models/user.model");
 const { createSecretKey, createTokenPair } = require("../helper/helperToken");
-const { createKeyToken, findKeyByUserIdAndDelete, findKeyByUserIdAndUpdate } = require("./keyToken.service");
+const {
+    createKeyToken,
+    findKeyByUserIdAndDelete,
+    findKeyByUserIdAndUpdate,
+    findByUserIdAndPull,
+} = require("./keyToken.service");
 const { generateCookie } = require("../helper/helperCookie");
 const KeyToken = require("../models/keyToken.model");
 
@@ -33,6 +38,7 @@ class UserService {
         const keyToken = await createKeyToken({
             userId: user._id,
             publicKey,
+            refreshToken,
             privateKey,
         });
         if (!keyToken) throw new BadRequestError();
@@ -51,8 +57,11 @@ class UserService {
         }
 
         const { accessToken, refreshToken } = createTokenPair(keyToken.userId, keyToken.publicKey, keyToken.privateKey);
-
-        const key = await findKeyByUserIdAndUpdate({ userId: keyToken.userId, refreshTokenOld });
+        const key = await findKeyByUserIdAndUpdate({
+            userId: keyToken.userId,
+            refreshTokenOld,
+            refreshTokenNew: refreshToken,
+        });
         if (!key) throw new UnAuthorization("Something wrong happend, please login!");
 
         generateCookie(res, "refreshToken", refreshToken);
@@ -63,7 +72,10 @@ class UserService {
     };
 
     static logout = async (req, res, next) => {
-        const foundKeyToken = await KeyToken.findOneAndDelete({ userId: req.userId });
+        const foundKeyToken = await findByUserIdAndPull({
+            userId: req.userId,
+            refreshToken: req.refreshTokenOld,
+        });
         if (!foundKeyToken) throw new UnAuthorization();
         res.clearCookie("refreshToken");
         return;

@@ -6,6 +6,7 @@ class ProductController {
         const value = {
             type: req.body.productType,
             payload: { ...req.body, productShop: req.userId },
+            files: req.files,
         };
         new CREATED({ data: await ProductFactory.createProduct(value) }).send(res);
     });

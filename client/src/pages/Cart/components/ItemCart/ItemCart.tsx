@@ -25,7 +25,7 @@ function ItemCart({ cart, shopName, shopId }: { cart: CartProductType; shopName:
     return (
         <>
             <div className="my-2 flex items-center">
-                <input type="checkbox" defaultChecked={false} onChange={toggle} />
+                <input type="checkbox" checked={cart.isChecked} onChange={toggle} />
                 <div className="mx-3">
                     <img className="h-[80px] w-[80px] object-cover" src={cart.thumbnail} alt="Product" />
                 </div>

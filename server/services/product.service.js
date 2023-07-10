@@ -5,16 +5,18 @@ const { Types } = require("mongoose");
 const { createInventory, updateInventory } = require("../repositories/inventory.repo");
 const { findCategoryAndUpdate } = require("../repositories/category.repo");
 const ApiFeatured = require("../utils/apiFeatured");
+const { validateCreatedOneImage, validateCreatedMultipleImage } = require("../validation/image.validation");
+const { saveOneImage, saveImages } = require("../utils/saveImage");
 class ProductFactory {
     static productRegistry = {};
     static registryProductType(type, classRef) {
         ProductFactory.productRegistry[type] = classRef;
     }
 
-    static async createProduct({ type, payload }) {
+    static async createProduct({ type, payload, files }) {
         const productClass = ProductFactory.productRegistry[type];
         if (!productClass) throw new BadRequestError("Type product wrong!!");
-        return new productClass(payload).createProduct();
+        return new productClass(payload).createProduct(files);
     }
     static async updateProduct({ type, id, payload }) {
         delete payload.productType;
@@ -28,17 +30,6 @@ class ProductFactory {
         const data = await new ApiFeatured(Product.find(), queryStr).filter().sort().search().paginate();
 
         const products = await data.query;
-        // .populate({
-        //     path: "productShop",
-        //     select: "address",
-        //     match: { address: queryStr.location },
-        // })
-        // .exec()
-        // .then((res) => {
-        //     const check = res.some((val) => val.productShop === null);
-        //     return check ? [] : res;
-        // });
-
         return { products, page: products.length ? data.page : { itemsPerPage: 12, totalItems: 0, totalPage: 0 } };
     };
     static async getProductDetail(id) {
@@ -69,9 +60,9 @@ class ProductService {
         productShop,
         productName,
         productType,
+        productQuantity,
         productThumbnail,
         productMultipleThumbnail,
-        productQuantity,
         productPrice,
         productDescription,
         productAttribute,
@@ -89,6 +80,29 @@ class ProductService {
         this.productBrand = productBrand;
     }
 
+    validateThumbnail(files) {
+        const productThumbnail = validateCreatedOneImage(files, "productThumbnail");
+        const productMultipleThumbnail = validateCreatedMultipleImage(files, "productMultipleThumbnail");
+        return { productThumbnail, productMultipleThumbnail };
+    }
+    saveImage(files) {
+        const { productThumbnail, productMultipleThumbnail } = this.validateThumbnail(files);
+        const newThumbnail = saveOneImage({
+            width: 280,
+            height: 330,
+            file: productThumbnail,
+            name: "thumbnail",
+            path: "product",
+        });
+        const newMultipleThumbnail = saveImages({
+            width: 280,
+            height: 330,
+            files: productMultipleThumbnail,
+            name: "product",
+            path: "product",
+        });
+        return { productThumbnail: newThumbnail, productMultipleThumbnail: newMultipleThumbnail };
+    }
     async createProduct(_id) {
         const newProduct = await Product.create({ ...this, _id });
         if (newProduct) {
@@ -117,11 +131,15 @@ class ProductService {
 }
 
 class ClothingService extends ProductService {
-    async createProduct() {
+    async createProduct(files) {
         const foundProduct = await Product.findOne({ productShop: this.productShop, productName: this.productName });
         if (foundProduct) {
             throw new ConflictError("Tên sản phẩm đã tồn tại!");
         }
+        const { productThumbnail, productMultipleThumbnail } = this.saveImage(files);
+        this.productThumbnail = productThumbnail;
+        this.productMultipleThumbnail = productMultipleThumbnail;
+
         const newClothing = await Clothing.create({ productShop: this.productShop, ...this.productAttribute });
         if (!newClothing) throw new BadRequestError("Create clothing wrong!!");
         const newProduct = await super.createProduct(newClothing._id);
@@ -143,11 +161,15 @@ class ClothingService extends ProductService {
 }
 
 class ElectronicService extends ProductService {
-    async createProduct() {
+    async createProduct(files) {
         const foundProduct = await Product.findOne({ productShop: this.productShop, productName: this.productName });
         if (foundProduct) {
             throw new ConflictError("Tên sản phẩm đã tồn tại!");
         }
+        const { productThumbnail, productMultipleThumbnail } = this.saveImage(files);
+        this.productThumbnail = productThumbnail;
+        this.productMultipleThumbnail = productMultipleThumbnail;
+
         const newElectronic = await Electronic.create({ productShop: this.productShop, ...this.productAttribute });
         if (!newElectronic) throw new BadRequestError("Create electronic wrong!!");
         const newProduct = await super.createProduct(newElectronic._id);

@@ -80,6 +80,7 @@ const clothingSchema = new Schema({
     size: {
         type: [String],
         required: true,
+        default: [],
     },
     material: {
         type: String,
@@ -88,6 +89,7 @@ const clothingSchema = new Schema({
     color: {
         type: [String],
         required: true,
+        default: [],
     },
     special: {
         type: [

@@ -3,6 +3,9 @@ const Discount = require("../models/discout.model");
 const { BadRequestError, ConflictError } = require("../responPhrase/errorResponse");
 
 class DiscountService {
+    static async getDiscount({ discountShop }) {
+        return await Discount.find({ discountShop }).lean();
+    }
     static async createDiscount({ body }) {
         const { discountStartDate, discountEndDate } = body;
         if (new Date(discountStartDate) > new Date(discountEndDate))

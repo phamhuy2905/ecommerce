@@ -6,6 +6,7 @@ import { addCart } from "../../../../redux/cart.slice";
 import toast, { Toaster } from "react-hot-toast";
 function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
     const [size, setSize] = useState<string>("");
+    const [color, setColor] = useState<string>("");
     const [quantity, setQuantity] = useState<number>(1);
     const dispatch = useAppDispatch();
     const addToCart = () => {
@@ -19,7 +20,7 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
                     name: product.productName,
                     price: product.productPrice,
                     thumbnail: product.productThumbnail,
-                    color: "Unknow",
+                    color,
                     isChecked: false,
                 },
                 shopId: product.productShop._id,
@@ -38,13 +39,17 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
                         {product?.productAttribute.color?.map((val, index) => {
                             return (
                                 <span
+                                    onClick={() => setColor(val)}
                                     key={index}
-                                    className="mr-3 cursor-pointer border-[1px] border-gray-200 px-2 py-2 text-[15px]"
+                                    className={`mr-3 h-[35px] w-[35px] cursor-pointer text-center text-[18px] font-semibold  leading-[35px]  ${
+                                        color === val ? "border-[2px] border-blue-400" : "border-[1px] border-gray-200"
+                                    }`}
                                 >
                                     {val}
                                 </span>
                             );
                         })}
+                        {!color && <span className="ml-3 text-[14px] text-red-500">{"Vui lòng chọn color"}</span>}
                     </>
                 ) : (
                     <span>Unkown</span>
@@ -65,7 +70,7 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
                         </span>
                     );
                 })}
-                <span className="ml-3 text-[14px] text-red-500">{"Vui lòng chọn size"}</span>
+                {!size && <span className="ml-3 text-[14px] text-red-500">{"Vui lòng chọn size"}</span>}
             </p>
             <div className="mb-4 flex items-center ">
                 <div className="flex items-center bg-[#ddd]">

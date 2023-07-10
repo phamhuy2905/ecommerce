@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const { UnAuthorization, ForbidentError, BadRequestError } = require("../responPhrase/errorResponse");
 const asyncHandel = require("./asynHandel");
-const { findUserById, findKeyTokenByUserId } = require("../repositories/auth.repo");
+const { findUserById } = require("../repositories/auth.repo");
+const { findKeyTokenByRefreshToken } = require("../services/keyToken.service");
 
 const checkAuth = (req) => {
     const token = req.headers["authorization"];
@@ -15,17 +16,40 @@ const checkAuth = (req) => {
     return { accessToken, refreshToken };
 };
 
-const authentication = asyncHandel(async (req, res, next) => {
-    const { userId } = req.body;
-    if (!userId) throw new UnAuthorization("!!userid");
-    const user = await findUserById(userId);
-    if (!user) throw new UnAuthorization("Something wronggg, please relogin!");
+const authenticationV2 = asyncHandel(async (req, res, next) => {
+    const { accessToken, refreshToken } = checkAuth(req);
 
-    const keyToken = await findKeyTokenByUserId(user._id);
+    const keyToken = await findKeyTokenByRefreshToken({ refreshToken });
     if (!keyToken) throw new UnAuthorization("Something wronggg, please relogin!");
 
-    const { accessToken, refreshToken } = checkAuth(req);
+    const user = await findUserById(keyToken.userId);
+    if (!user) throw new UnAuthorization("Something wronggg, please relogin!");
+
     jwt.verify(accessToken, keyToken.publicKey, (err, decode) => {
+        if (err && err?.name !== "TokenExpiredError") throw new UnAuthorization("Vui lòng đăng nhập để tiếp tục!");
+    });
+
+    jwt.verify(refreshToken, keyToken.privateKey, (err, decode) => {
+        if (err) throw new UnAuthorization("Please relogin!");
+        req.keyToken = keyToken;
+        req.refreshTokenOld = refreshToken;
+        req.userId = keyToken.userId;
+        req.user = user;
+        next();
+    });
+});
+
+const authentication = asyncHandel(async (req, res, next) => {
+    const { accessToken, refreshToken } = checkAuth(req);
+
+    const keyToken = await findKeyTokenByRefreshToken({ refreshToken });
+    if (!keyToken) throw new UnAuthorization("Something wronggg, please relogin!");
+
+    const user = await findUserById(keyToken.userId);
+    if (!user) throw new UnAuthorization("Something wronggg, please relogin!");
+
+    jwt.verify(accessToken, keyToken.publicKey, (err, decode) => {
+        if (err && err?.name === "TokenExpiredError") throw new UnAuthorization("TokenExpiredError");
         if (err && err?.name !== "TokenExpiredError") throw new UnAuthorization("Vui lòng đăng nhập để tiếp tục!");
     });
 
@@ -48,4 +72,4 @@ const authenticationRole = (role) => {
     });
 };
 
-module.exports = { authentication, authenticationRole };
+module.exports = { authentication, authenticationRole, authenticationV2 };

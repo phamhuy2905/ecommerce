@@ -6,12 +6,12 @@ const { checkOutSchema, deleteProductOrderSchema } = require("../validation/orde
 const { objectIdSchema } = require("../validation/customValdation");
 const router = express.Router();
 
-router.use(authentication, authenticationRole(["0003"]));
-router.post("/", authentication, validator(checkOutSchema), CheckOutController.checkOutReview);
-router.post("/created", authentication, validator(checkOutSchema), CheckOutController.createdOrder);
+router.use(authentication);
+// router.use(authentication, authenticationRole(["0003"]));
+router.post("/", validator(checkOutSchema), CheckOutController.checkOutReview);
+router.post("/created", validator(checkOutSchema), CheckOutController.createdOrder);
 router.patch(
     "/delete/:id",
-    authentication,
     validator(objectIdSchema, "params"),
     validator(deleteProductOrderSchema),
     CheckOutController.deleteProductOrderSchema

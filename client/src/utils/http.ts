@@ -45,7 +45,7 @@ class http {
             },
             (error) => {
                 if (error.response.data.status === 401 && error.response.data.message === "TokenExpiredError") {
-                    this.refreshToken = this.refreshToken ? this.refreshToken : refreshToken();
+                    this.refreshToken = this.refreshToken ? this.refreshToken : refreshToken(this.profile._id);
                     this.refreshToken
                         .then((res) => {
                             this.accessToken = res.data.data.accessToken;
@@ -61,6 +61,7 @@ class http {
                     remmoveTokenLocal();
                     remmoveProfileLocal();
                     window.location.reload();
+                    return;
                 }
                 return Promise.reject(error);
             }

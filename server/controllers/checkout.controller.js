@@ -4,7 +4,6 @@ const CheckOutSerive = require("../services/checkout.service");
 class CheckOutController {
     static checkOutReview = asyncHandel(async (req, res, next) => {
         const data = {
-            userId: req.userId,
             body: { ...req.body, userId: req.userId },
         };
         new OK({ data: await CheckOutSerive.checkOutReview(data) }).send(res);
@@ -15,7 +14,7 @@ class CheckOutController {
             userId: req.userId,
             body: { ...req.body, userId: req.userId },
         };
-        new OK({ data: await CheckOutSerive.createdOrder(data) }).send(res);
+        new CREATED({ data: await CheckOutSerive.createdOrder(data) }).send(res);
     });
 
     static deleteProductOrderSchema = asyncHandel(async (req, res, next) => {

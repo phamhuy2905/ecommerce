@@ -1,12 +1,18 @@
 const express = require("express");
 const DiscountController = require("../controllers/discount.controller");
 const { authentication } = require("../middlewares/authMiddleware");
-const { createDiscount, updateDiscount, updatePublishDiscount } = require("../validation/discoun.validation");
+const {
+    createDiscount,
+    updateDiscount,
+    updatePublishDiscount,
+    getDiscount,
+} = require("../validation/discoun.validation");
 const validator = require("../middlewares/validator");
 const { objectIdSchema } = require("../validation/customValdation");
 const router = express.Router();
 
-router.post("/", authentication, validator(createDiscount), DiscountController.createDiscount);
+router.get("/:discountShop", validator(getDiscount, "params"), DiscountController.getDiscount);
+router.post("/", validator(createDiscount), authentication, DiscountController.createDiscount);
 router.patch(
     "/:id",
     authentication,

@@ -9,7 +9,7 @@ import AuthProvider from "./context/auth.context.tsx";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.ts";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             refetchOnWindowFocus: false,

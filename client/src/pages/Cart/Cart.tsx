@@ -6,8 +6,10 @@ import HeaderItemCart from "./components/HeaderItemCart";
 import { Link } from "react-router-dom";
 import { omit } from "lodash";
 import { useMemo } from "react";
+import { useAuthContext } from "../../context/auth.context";
 
 function Cart() {
+    const { profile } = useAuthContext();
     const { carts, metaTotal } = useSelector((state: RootState) => state.cart);
     const data = useMemo(() => {
         const shopOrders = carts
@@ -17,12 +19,21 @@ function Cart() {
                     return {
                         shopId: item.shopId,
                         itemProducts: itemProducts.map((val) =>
-                            omit({ productId: val.id, price: val.price, quantity: val.quantity })
+                            omit({
+                                productId: val.id,
+                                price: val.price,
+                                quantity: val.quantity,
+                                name: val.name,
+                                thumbnail: val.thumbnail,
+                                size: val.size,
+                                color: val.color,
+                            })
                         ),
+                        shopName: item.shopName,
                     };
             })
             .filter((val) => val);
-        return shopOrders.length ? { useId: "123asd", shopOrders } : null;
+        return shopOrders.length ? { userId: profile?._id, shopOrders } : null;
     }, [carts]);
     return (
         <div className="bg-[#f5f5f5] py-10">
