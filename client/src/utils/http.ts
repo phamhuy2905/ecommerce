@@ -15,6 +15,7 @@ class http {
     private accessToken: string;
     profile: UserType;
     refreshToken: Promise<AxiosResponse<AuthResponseLogin, any>> | null;
+    contentType: boolean = true;
 
     constructor() {
         this.refreshToken = null;
@@ -23,8 +24,8 @@ class http {
         this.instance = axios.create({
             baseURL: "http://localhost:3001/api/v1/",
             headers: {
-                // "Content-Type": "application/json",
-                "Content-Type": "multipart/form-data",
+                "Content-Type": this.contentType ? "application/json" : "multipart/form-data",
+                // "Content-Type": "multipart/form-data",
             },
             withCredentials: true,
         });
@@ -46,7 +47,7 @@ class http {
             },
             (error) => {
                 if (error.response.data.status === 401 && error.response.data.message === "TokenExpiredError") {
-                    this.refreshToken = this.refreshToken ? this.refreshToken : refreshToken(this.profile._id);
+                    this.refreshToken = this.refreshToken ? this.refreshToken : refreshToken();
                     this.refreshToken
                         .then((res) => {
                             this.accessToken = res.data.data.accessToken;

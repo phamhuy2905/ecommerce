@@ -30,6 +30,7 @@ const getLatestMessage = async ({ userId }) => {
     // ];
     const filter = [{ senderId: userId }, { recevierId: userId }];
     return await LatestMessage.find({ $or: filter })
+        .sort({ updatedAt: -1 })
         .populate({
             path: "senderId",
             select: "fullName avatar",

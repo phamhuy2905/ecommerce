@@ -25,11 +25,18 @@ class ProductFactory {
         if (!productClass) throw new BadRequestError("Type product wrong!!");
         return new productClass(body).updateProduct(new Types.ObjectId(id));
     }
+    static async deleteSoftProduct(id) {
+        return await Product.findByIdAndUpdate(id, { isPublish: false }, { new: true });
+    }
 
     static getProduct = async (queryStr) => {
-        const data = await new ApiFeatured(Product.find(), queryStr).filter().sort().search().paginate();
+        const data = await new ApiFeatured(Product.find({ isPublish: true }), queryStr)
+            .filter()
+            .sort()
+            .search()
+            .paginate();
 
-        const products = await data.query;
+        const products = await data.query.populate("productShop", "fullName address");
         return { products, page: products.length ? data.page : { itemsPerPage: 12, totalItems: 0, totalPage: 0 } };
     };
     static async getProductDetail(id) {

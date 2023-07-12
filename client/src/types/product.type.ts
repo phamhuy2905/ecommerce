@@ -6,13 +6,14 @@ export interface ProductType {
         address?: string;
         fullName: string;
     };
+    productBrand: string;
     productName: string;
     productType: string;
     productThumbnail: string;
     productMultipleThumbnail: Array<string>;
-    productQuantity: number;
-    productPrice: number;
-    ratingsAverage: number;
+    productQuantity: number | string;
+    productPrice: number | string;
+    ratingsAverage: number | string;
     productDescription: string;
 }
 

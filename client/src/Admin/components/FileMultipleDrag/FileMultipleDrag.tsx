@@ -128,7 +128,7 @@ function FileMultipleDrag({
                                     className="absolute right-2 top-2 cursor-pointer text-[20px]"
                                     onClick={() => handleDeleteImage(val)}
                                 >
-                                    <HiXMark />
+                                    <HiXMark className={imageSever ? "text-red-600" : ""} />
                                 </span>
                             </div>
                         );

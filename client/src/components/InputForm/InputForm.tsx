@@ -8,8 +8,9 @@ interface Props {
     placeholder?: string;
     register: UseFormRegister<any>;
     rule?: RegisterOptions;
+    disabled?: boolean;
 }
-function InputForm({ title, messageError, name, placeholder, register, rule, type = "text" }: Props) {
+function InputForm({ title, messageError, name, placeholder, register, rule, type = "text", disabled = false }: Props) {
     return (
         <div className="mb-4">
             <label className="mb-2 block text-sm font-semibold text-gray-700" htmlFor={name}>
@@ -23,6 +24,7 @@ function InputForm({ title, messageError, name, placeholder, register, rule, typ
                 type={type}
                 placeholder={placeholder}
                 {...register(name, rule)}
+                disabled={disabled}
             />
             <p className="min-h-[16px] text-xs italic text-red-500">{messageError}</p>
         </div>

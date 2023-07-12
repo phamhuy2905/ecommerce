@@ -3,13 +3,11 @@ const Joi = require("joi");
 const createdProductSchema = Joi.object({
     productName: Joi.string().required().min(3),
     productType: Joi.string().required(),
-    // productThumbnail: Joi.required(),
-    // productMultipleThumbnail: Joi.array().items(Joi.string()).min(3).required(),
     productQuantity: Joi.number().required().min(0),
     productPrice: Joi.number().required().min(0),
     productDescription: Joi.string().required().min(30),
     productAttribute: Joi.object(),
-    productBrand: Joi.string().required(),
+    productBrand: Joi.string().required().min(6),
     productAttribute: Joi.object({
         manufacture: Joi.string(),
         size: Joi.array().items(Joi.string()).default([]),
@@ -18,6 +16,30 @@ const createdProductSchema = Joi.object({
         special: Joi.array().default([]),
     }).required(),
 });
+
+const updateProductSchema = Joi.object({
+    productName: Joi.string().min(3),
+    productType: Joi.string().required(),
+    productQuantity: Joi.number().min(0),
+    productPrice: Joi.number().min(0),
+    productDescription: Joi.string().min(30),
+    productAttribute: Joi.object(),
+    productBrand: Joi.string().min(6),
+    productAttribute: Joi.object({
+        manufacture: Joi.string(),
+        size: Joi.array().items(Joi.string()).default([]),
+        color: Joi.array().items(Joi.string()).default([]),
+        material: Joi.string().required(),
+        special: Joi.array().default([]),
+    }),
+    fileDeletes: Joi.array().items(Joi.string()),
+});
+
+module.exports = {
+    createdProductSchema,
+    updateProductSchema,
+};
+
 // const createdProductSchema = Joi.object({
 //     userId: Joi.string(),
 //     productName: Joi.string().required().min(3),
@@ -54,7 +76,3 @@ const createdProductSchema = Joi.object({
 //         material: Joi.string().required(),
 //     }).required(),
 // });
-
-module.exports = {
-    createdProductSchema,
-};

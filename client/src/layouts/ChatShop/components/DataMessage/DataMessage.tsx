@@ -29,7 +29,7 @@ function DataMessage() {
     useMemo(() => {
         if (dataMessage.length) {
             const dataMessageFilter = [...dataMessage].filter((val) => val.senderId === data.recevierId);
-            if (!dataMessageFilter.length) {
+            if (!dataMessageFilter.length || !dataMessageFilter[0].data[0]) {
                 setIsOnline(false);
                 return;
             }

@@ -24,6 +24,9 @@ class ProductController {
     static getProductDetail = asyncHandel(async (req, res, next) => {
         new OK({ data: await ProductFactory.getProductDetail(req.params.id) }).send(res);
     });
+    static deleteSoftProduct = asyncHandel(async (req, res, next) => {
+        new OK({ data: await ProductFactory.deleteSoftProduct(req.params.id) }).send(res);
+    });
 }
 
 module.exports = ProductController;

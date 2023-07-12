@@ -66,8 +66,8 @@ export const rules = (_getValues: UseFormGetValues<AddProductType>): Rules => {
                 message: "Trường brand thì bắt buộc!",
             },
             minLength: {
-                value: 6,
-                message: "Trường brand tối thiểu 6 kí tự!",
+                value: 3,
+                message: "Trường brand tối thiểu 3 kí tự!",
             },
         },
     };

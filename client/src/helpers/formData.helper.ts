@@ -30,6 +30,8 @@ const formDataV2 = (form: FormData, data: any, namespace?: string) => {
                 form.set(key, data[key]);
             } else if (typeof data[property] === "object") {
                 formDataV2(form, data[key], key);
+            } else if (!data[key]) {
+                continue;
             } else {
                 form.set(key, data[key]);
             }

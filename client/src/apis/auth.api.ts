@@ -10,8 +10,8 @@ export const authLogin = (data: AuthLogin) => {
     return http.instance.post<AuthResponseLogin>("auth/login", data);
 };
 
-export const refreshToken = async (userId: string) => {
-    return await http.instance.post<AuthResponseLogin>("auth/refreshToken", { userId });
+export const refreshToken = async () => {
+    return await http.instance.post<AuthResponseLogin>("auth/refreshToken");
 };
 
 export const authLogout = async () => {
