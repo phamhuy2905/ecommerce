@@ -51,15 +51,15 @@ function Login() {
     }, []);
     return (
         <div className="container mx-auto">
-            <div className="flex justify-center px-6 my-12">
-                <div className="w-full xl:w-3/4 lg:w-11/12 flex">
+            <div className="my-12 flex justify-center px-6">
+                <div className="flex w-full lg:w-11/12 xl:w-3/4">
                     <div
-                        className="w-full h-auto bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg"
+                        className="hidden h-auto w-full rounded-l-lg bg-gray-400 bg-cover lg:block lg:w-1/2"
                         style={{ backgroundImage: 'url("https://source.unsplash.com/K4mSJ7kc0As/600x800")' }}
                     />
-                    <div className="w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none">
-                        <h3 className="pt-4 text-2xl text-center">Welcome Back!</h3>
-                        <form className="px-8 pt-6 pb-8 mb-4 bg-white rounded">
+                    <div className="w-full rounded-lg bg-white p-5 lg:w-1/2 lg:rounded-l-none">
+                        <h3 className="pt-4 text-center text-2xl">Welcome Back!</h3>
+                        <form className="mb-4 rounded bg-white px-8 pb-8 pt-6">
                             <InputForm
                                 title="Email"
                                 name="email"
@@ -88,7 +88,7 @@ function Login() {
                                     onClick={onSubmit}
                                     disabled={isLoading}
                                     isLoading={isLoading}
-                                    className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline flex items-center justify-center"
+                                    className="focus:shadow-outline flex w-full items-center justify-center rounded-full bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
                                 >
                                     Đăng nhập
                                 </Button>
@@ -96,7 +96,7 @@ function Login() {
                             <hr className="mb-6 border-t" />
                             <div className="text-center">
                                 <Link
-                                    className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
+                                    className="inline-block align-baseline text-sm text-blue-500 hover:text-blue-800"
                                     to="/register"
                                 >
                                     Create an Account!
@@ -104,7 +104,7 @@ function Login() {
                             </div>
                             <div className="text-center">
                                 <a
-                                    className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
+                                    className="inline-block align-baseline text-sm text-blue-500 hover:text-blue-800"
                                     href="#"
                                 >
                                     Forgot Password?

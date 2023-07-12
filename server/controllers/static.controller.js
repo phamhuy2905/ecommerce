@@ -5,6 +5,9 @@ class StaticController {
     static getCategory = asyncHandel(async (req, res, next) => {
         new OK({ data: await StaticService.getCategory(req, res, next) }).send(res);
     });
+    static testAtomic = asyncHandel(async (req, res, next) => {
+        new OK({ data: await StaticService.testAtomic(req, res, next) }).send(res);
+    });
 }
 
 module.exports = StaticController;

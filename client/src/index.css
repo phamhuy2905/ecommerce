@@ -7,8 +7,75 @@ html {
 
 @layer components {
     .content {
-        @apply xl:max-w-7xl mx-auto px-4;
+        @apply mx-auto px-4 xl:max-w-7xl;
     }
 }
 
 @tailwind utilities;
+
+.swal2-title {
+    font-size: 22px !important;
+}
+.swal2-html-container {
+    font-size: 16px !important;
+}
+
+.highcharts-container {
+    margin: 0 auto;
+}
+
+/* [data-highcharts-chart] {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+        rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+} */
+
+.highcharts-credits {
+    display: none;
+}
+
+.highcharts-drilldown-axis-label {
+    text-decoration: none !important;
+    font-size: 13px !important;
+    color: rgb(102, 102, 102) !important;
+    fill: rgb(102, 102, 102) !important;
+}
+
+.highcharts-title {
+    font-size: 16px !important;
+}
+
+.highcharts-label text,
+.highcharts-button-box ~ text {
+    color: rgb(102, 102, 102) !important;
+    fill: rgb(102, 102, 102) !important;
+}
+
+:root {
+    --clr-bg-dark: #000000; /* gray-800 */
+    --clr-bg-light: rgb(245 248 254); /* zinc-50 */
+
+    --clr-text-light: #000000; /* gray-200 */
+    --clr-text-dark: #fafafa; /* zinc-50 */
+
+    --clr-modal-dark: #171717; /* zinc-50 */
+    --clr-modal-light: rgb(245 248 254); /* zinc-50 */
+}
+
+.dark {
+    background-color: var(--clr-bg-dark);
+    color: var(--clr-text-dark);
+}
+
+.light {
+    background-color: var(--clr-bg-light);
+    color: var(--clr-text-light);
+}
+
+.dark_soft {
+    background-color: var(--clr-modal-dark);
+    color: var(--clr-text-dark);
+}
+.ligth_soft {
+    background-color: var(--clr-modal-light);
+    color: var(--clr-text-light);
+}

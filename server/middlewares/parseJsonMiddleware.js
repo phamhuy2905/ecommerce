@@ -26,7 +26,6 @@ const parseJson = (body) => {
 
 const parseJsonMiddleware = (req, res, next) => {
     const data = parseJson(req.body);
-    // saveOneImage({ width: 300, height: 300, file: req.files[0], name: "test", path: "test" });
     req.body = data;
     next();
 };

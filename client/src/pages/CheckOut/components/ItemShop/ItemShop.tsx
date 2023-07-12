@@ -7,6 +7,7 @@ function ItemShop({ shopName, shopId }: { shopName: string; shopId: string }) {
     const { profile } = useAuthContext();
     const handleChooseShopChat = () => {
         if (!profile) return;
+        if (profile._id === shopId) return;
         dispatch(chooseShopChat({ senderId: profile._id, recevierId: shopId, nameRecevier: shopName, message: "" }));
     };
     return (

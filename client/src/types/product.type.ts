@@ -16,14 +16,15 @@ export interface ProductType {
     productDescription: string;
 }
 
+export interface TypePage {
+    itemsPerPage: number;
+    totalPage: number;
+    totalItems: number;
+}
 export interface ProductResponseType
     extends ResponseSuccessData<{
         products: ProductType[];
-        page: {
-            itemsPerPage: number;
-            totalPage: number;
-            totalItems: number;
-        };
+        page: TypePage;
     }> {}
 
 export interface FilterProductType {
@@ -45,6 +46,24 @@ export interface ProductTypeDetaill extends ProductType {
         special?: any;
         color?: string[];
     };
+}
+
+export interface AddProductType {
+    productName: string;
+    productType: string;
+    productQuantity: number | string;
+    productPrice: number | string;
+    productDescription: string;
+    productBrand: string;
+    size?: string[];
+    color?: string[];
+    material?: string;
+}
+
+export interface ProductAttributeType {
+    size?: string[];
+    material?: string;
+    color?: string[];
 }
 
 export type ProductDetailResponseType = ResponseSuccessData<ProductTypeDetaill>;

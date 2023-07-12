@@ -7,7 +7,13 @@ import { useQuery } from "react-query";
 import { getDiscount } from "../../../../apis/discount.api";
 import { formatCoin } from "../../../../utils/format";
 import { queryClient } from "../../../../main";
-function Votcher({ discountShop }: { discountShop: string }) {
+function Votcher({
+    discountShop,
+    handleTest,
+}: {
+    discountShop: string;
+    handleTest: ({ shopId, discountCode }: { shopId?: string; discountCode?: string }) => void;
+}) {
     const [call, setCall] = useState<boolean>(false);
     const { data } = useQuery({
         queryKey: ["discount", discountShop],
@@ -73,8 +79,16 @@ function Votcher({ discountShop }: { discountShop: string }) {
                                                                     )}
                                                             </span>
                                                         </p>
-                                                        <button className="rounded-[5px] bg-blue-500 px-2 py-1 text-[14px] text-white">
-                                                            Lưu
+                                                        <button
+                                                            onClick={() =>
+                                                                handleTest({
+                                                                    discountCode: val.discountCode,
+                                                                    shopId: discountShop,
+                                                                })
+                                                            }
+                                                            className="rounded-[5px] bg-blue-500 px-2 py-1 text-[14px] text-white"
+                                                        >
+                                                            Áp dụng
                                                         </button>
                                                     </div>
                                                 </div>

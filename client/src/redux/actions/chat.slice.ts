@@ -5,7 +5,7 @@ interface initialStateType {
     isHiddentChat: boolean;
     data: ChatType;
     listOnline: UserOnlineType[];
-    dataMessage: MessageType[];
+    dataMessage: { senderId: string; data: MessageType[] }[];
     dataLatestMessage: LatestMessage[];
 }
 const initialState: initialStateType = {
@@ -36,10 +36,13 @@ const chatSlice = createSlice({
             state.listOnline = action.payload;
         },
         setDataMessage: (state, action: PayloadAction<MessageType[]>) => {
-            state.dataMessage = action.payload;
+            const foundDataMessage = state.dataMessage.findIndex((val) => val.senderId === state.data.recevierId);
+            if (foundDataMessage === -1)
+                state.dataMessage.push({ senderId: state.data.recevierId, data: action.payload });
         },
         addDataMessge: (state, action: PayloadAction<MessageType>) => {
-            state.dataMessage.push(action.payload);
+            const foundDataMessage = state.dataMessage.findIndex((val) => val.senderId === state.data.recevierId);
+            if (foundDataMessage !== -1) state.dataMessage[foundDataMessage].data.push(action.payload);
         },
         setDataLatestMessage: (state, action: PayloadAction<LatestMessage[]>) => {
             state.dataLatestMessage = action.payload;

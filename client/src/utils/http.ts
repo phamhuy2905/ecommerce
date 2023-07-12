@@ -23,7 +23,8 @@ class http {
         this.instance = axios.create({
             baseURL: "http://localhost:3001/api/v1/",
             headers: {
-                "Content-Type": "application/json",
+                // "Content-Type": "application/json",
+                "Content-Type": "multipart/form-data",
             },
             withCredentials: true,
         });

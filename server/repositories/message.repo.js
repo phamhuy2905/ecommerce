@@ -18,6 +18,7 @@ const getMessage = async ({ senderId, recevierId }) => {
         { recevierId: senderId, senderId: recevierId },
     ];
     return await Message.find({ $or: filter })
+        .sort({ createdAt: 1 })
         .populate({
             path: "senderId",
             select: "fullName avatar",

@@ -28,7 +28,12 @@ function DataMessage() {
     });
     useMemo(() => {
         if (dataMessage.length) {
-            const { recevierId, senderId } = dataMessage[0];
+            const dataMessageFilter = [...dataMessage].filter((val) => val.senderId === data.recevierId);
+            if (!dataMessageFilter.length) {
+                setIsOnline(false);
+                return;
+            }
+            const { recevierId, senderId } = dataMessageFilter[0].data[0];
             const check = listOnline.findIndex((val) => {
                 if ((val.userId === recevierId._id || val.userId === senderId._id) && val.userId !== profile._id) {
                     return true;
@@ -82,27 +87,37 @@ function DataMessage() {
                         </div>
                     </div>
                     <div ref={refScroll} className="h-[350px] overflow-y-scroll px-2 py-2 ">
-                        {dataMessage?.map((val, index) => {
-                            if (index > 0 && index <= dataMessage.length - 1) {
-                                const timePre = new Date(dataMessage[index - 1].createdAt).getTime();
-                                const timeCur = new Date(dataMessage[index].createdAt).getTime();
-                                if (timeCur / 60000 - timePre / 60000 >= 10) {
-                                    isOk = true;
-                                }
+                        {dataMessage?.map((item, key) => {
+                            if (item.senderId === data.recevierId) {
+                                return (
+                                    <div key={key}>
+                                        {item.data.map((val, index) => {
+                                            if (index > 0 && index <= item.data.length - 1) {
+                                                const timePre = new Date(item.data[index - 1].createdAt).getTime();
+                                                const timeCur = new Date(item.data[index].createdAt).getTime();
+                                                if (timeCur / 60000 - timePre / 60000 >= 10) {
+                                                    isOk = true;
+                                                }
+                                            }
+                                            return (
+                                                <div key={index}>
+                                                    {isOk === true && (
+                                                        <MessageMoment
+                                                            message={moment(val.createdAt).startOf("minute").fromNow()}
+                                                        />
+                                                    )}
+                                                    {(isOk = false)}
+                                                    {val.senderId._id === profile._id ? (
+                                                        <MessageMe message={val.message} />
+                                                    ) : (
+                                                        <MessageClient message={val.message} />
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                );
                             }
-                            return (
-                                <div key={index}>
-                                    {isOk === true && (
-                                        <MessageMoment message={moment(val.createdAt).startOf("minute").fromNow()} />
-                                    )}
-                                    {(isOk = false)}
-                                    {val.senderId._id === profile._id ? (
-                                        <MessageMe message={val.message} />
-                                    ) : (
-                                        <MessageClient message={val.message} />
-                                    )}
-                                </div>
-                            );
                         })}
                     </div>
                     <FormChat />

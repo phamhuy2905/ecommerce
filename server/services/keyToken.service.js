@@ -12,7 +12,6 @@ const findKeyByUserIdAndDelete = async (userId) => {
     await KeyToken.findOneAndDelete({ userId });
 };
 const findByUserIdAndPull = async ({ userId, refreshToken }) => {
-    console.log(refreshToken);
     return await KeyToken.findOneAndUpdate({ userId }, { $pull: { refreshTokens: refreshToken } }, { new: true });
 };
 const findKeyByUserIdAndUpdate = async ({ userId, refreshTokenOld, refreshTokenNew }) => {

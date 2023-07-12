@@ -20,21 +20,6 @@ class CheckOutSerive {
             const { shopId, itemProducts } = shopOrders[i];
             const checkProduct = await checkProductSever(itemProducts, shopId);
             if (!checkProduct.length) throw new BadRequestError("Order wrong!");
-            const totalPirce = checkProduct.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
-
-            const totalBalance = checkProduct.reduce((acc, curr) => {
-                if (curr.discountType === "amount") {
-                    return acc + curr.price * curr.quantity - curr.discountValue;
-                } else {
-                    const result = curr.price * curr.quantity;
-                    const resultPercen = result - result * (curr.discountValue / 100);
-                    return acc + resultPercen;
-                }
-            }, 0);
-
-            dataTotal.totalPrice = totalPirce;
-            dataTotal.totalDiscount = totalPirce - totalBalance;
-            dataTotal.totalBalance = totalBalance;
 
             const order = {
                 shopId,
@@ -42,6 +27,20 @@ class CheckOutSerive {
             };
             newShopOrders.push(order);
         }
+        const temp = newShopOrders.flatMap((val) => val.itemProducts);
+        const totalPrice = temp.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+        const totalBalance = temp.reduce((acc, curr) => {
+            if (curr.discountType === "amount") {
+                return acc + curr.price * curr.quantity - curr.discountValue;
+            } else {
+                const result = curr.price * curr.quantity;
+                const resultPercen = result - result * (curr.discountValue / 100);
+                return acc + resultPercen;
+            }
+        }, 0);
+        dataTotal.totalPrice = totalPrice;
+        dataTotal.totalBalance = totalBalance;
+        dataTotal.totalDiscount = totalPrice - totalBalance;
         const data = {
             ...body,
             newShopOrders,
