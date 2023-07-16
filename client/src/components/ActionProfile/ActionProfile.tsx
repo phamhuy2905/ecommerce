@@ -40,10 +40,10 @@ function ActionProfile() {
                             <ul>
                                 {profile?.fullName && (
                                     <li className="cursor-pointer text-[14px]  text-gray-500 hover:bg-slate-200">
-                                        <span className="block px-3 py-2   hover:bg-slate-200">
+                                        <a href={path.client.profile} className="block px-3 py-2   hover:bg-slate-200">
                                             {" "}
                                             {profile?.fullName}{" "}
-                                        </span>
+                                        </a>
                                     </li>
                                 )}
                                 {!isAuthenticated && (
@@ -62,12 +62,20 @@ function ActionProfile() {
                                 )}
 
                                 {isAuthenticated && (
-                                    <li
-                                        onClick={handleLogout}
-                                        className="cursor-pointer text-[14px] text-gray-500 hover:bg-slate-200"
-                                    >
-                                        <span className="block px-3 py-2  hover:bg-slate-200"> Đăng xuất</span>
-                                    </li>
+                                    <>
+                                        <li
+                                            onClick={handleLogout}
+                                            className="cursor-pointer text-[14px] text-gray-500 hover:bg-slate-200"
+                                        >
+                                            <span className="block px-3 py-2  hover:bg-slate-200"> Đăng xuất</span>
+                                        </li>
+                                        <li className="cursor-pointer text-[14px] text-gray-500 hover:bg-slate-200">
+                                            <a href={path.client.order} className="block px-3 py-2  hover:bg-slate-200">
+                                                {" "}
+                                                Đơn mua
+                                            </a>
+                                        </li>
+                                    </>
                                 )}
                                 <li className="cursor-pointer text-[14px]  text-gray-500 hover:bg-slate-200">
                                     <span className="block px-3 py-2   hover:bg-slate-200"> Language</span>

@@ -9,6 +9,7 @@ const ShopGrid = lazy(() => import("../pages/ShopGrid"));
 const ProductDetail = lazy(() => import("../pages/ProductDetail"));
 const Cart = lazy(() => import("../pages/Cart"));
 const CheckOut = lazy(() => import("../pages/CheckOut"));
+const MyOrder = lazy(() => import("../pages/MyOrder"));
 
 import DefaultLayout from "../layouts/DefaultLayout";
 import { useAuthContext } from "../context/auth.context";
@@ -89,6 +90,14 @@ function useRoutesElement() {
                     element: (
                         <DefaultLayout>
                             <Profile />
+                        </DefaultLayout>
+                    ),
+                },
+                {
+                    path: "/order",
+                    element: (
+                        <DefaultLayout>
+                            <MyOrder />
                         </DefaultLayout>
                     ),
                 },

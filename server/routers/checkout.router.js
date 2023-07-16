@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.use(authentication);
 // router.use(authentication, authenticationRole(["0003"]));
+router.get("/", CheckOutController.getOrder);
+router.get("/getAllOrder", CheckOutController.getAllOrder);
 router.post("/", validator(checkOutSchema), CheckOutController.checkOutReview);
 router.post("/created", validator(checkOutSchema), CheckOutController.createdOrder);
 router.patch(

@@ -7,7 +7,7 @@ const parseJson = (body) => {
     const keys = Object.keys(data);
     keys.forEach((val) => {
         const check = checkType(data[val]);
-        if (check === "String") {
+        if (check === "String" && data[val].length && !data[val].startsWith("0")) {
             if (
                 /^[\],:{}\s]*$/.test(
                     data[val]

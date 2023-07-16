@@ -14,8 +14,11 @@ const checkOutSchema = Joi.object({
                         color: Joi.allow(Joi.string()),
                         quantity: Joi.number().required(),
                         discountCode: Joi.string().allow(null),
+                        discountValue: Joi.number().allow(null),
+                        discountType: Joi.string().allow(null),
                     })
                 ),
+                noteShop: Joi.string().allow(null),
             })
         )
         .required(),

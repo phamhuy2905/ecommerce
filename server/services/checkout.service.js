@@ -4,6 +4,7 @@ const { incrDiscount } = require("../repositories/discont.repo");
 const { incrInventory } = require("../repositories/inventory.repo");
 const { checkProductSever, incrProduct } = require("../repositories/product.repo");
 const { BadRequestError } = require("../responPhrase/errorResponse");
+const ApiFeatured = require("../utils/apiFeatured");
 const { inventoryLock } = require("./redis.service");
 
 class CheckOutSerive {
@@ -17,13 +18,14 @@ class CheckOutSerive {
             totalShipping: 0,
         };
         for (let i = 0; i < shopOrders.length; i++) {
-            const { shopId, itemProducts } = shopOrders[i];
+            const { shopId, itemProducts, noteShop } = shopOrders[i];
             const checkProduct = await checkProductSever(itemProducts, shopId);
             if (!checkProduct.length) throw new BadRequestError("Order wrong!");
 
             const order = {
                 shopId,
                 itemProducts: checkProduct,
+                noteShop,
             };
             newShopOrders.push(order);
         }
@@ -92,7 +94,7 @@ class CheckOutSerive {
         );
         if (!order) throw new BadRequestError("Something wronggg!");
         const itemShops = order.shopOrders.find((val) => val.shopId === shopId);
-        Promise.allSettled(
+        Promise.all(
             itemShops.itemProducts.map(async (val) => {
                 await incrInventory({ productId: val.productId, quantity: val.quantity });
                 await incrProduct({ productId: val.productId, quantity: val.quantity });
@@ -102,6 +104,19 @@ class CheckOutSerive {
 
         return await Order.findById(idOrder).lean();
     }
+
+    static getOrder = async (req, res, next) => {
+        return await Order.find({ userId: req.userId })
+            .populate("shopOrders.shopId", "fullName avatar")
+            .populate("shopOrders.itemProducts.productId", "productName productType productThumbnail productSlug")
+            .lean();
+    };
+    static getAllOrder = async (req, res, next) => {
+        const queryStr = { page: req.query.page };
+        const data = await new ApiFeatured(Order.find(), queryStr).paginate();
+        const orders = await data.query.populate("shopOrders.shopId").populate("shopOrders.itemProducts.productId");
+        return { orders, page: orders.length ? data.page : { itemsPerPage: 12, totalItems: 0, totalPage: 0 } };
+    };
 }
 
 module.exports = CheckOutSerive;

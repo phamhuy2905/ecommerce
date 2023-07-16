@@ -5,8 +5,8 @@ import { useAuthContext } from "../../../../context/auth.context";
 function ItemShop({ shopName, shopId }: { shopName: string; shopId: string }) {
     const dispatch = useAppDispatch();
     const { profile } = useAuthContext();
+    if (!profile) return;
     const handleChooseShopChat = () => {
-        if (!profile) return;
         if (profile._id === shopId) return;
         dispatch(chooseShopChat({ senderId: profile._id, recevierId: shopId, nameRecevier: shopName, message: "" }));
     };

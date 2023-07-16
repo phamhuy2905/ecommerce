@@ -19,8 +19,8 @@ const inventoryLock = async ({ productId, quantity }) => {
         if (result === 1) {
             // chua ton tai se tra ve 1
             const isReservation = await reservationInventory({ productId, quantity });
-            await reservationProduct({ productId, quantity });
-            if (isReservation.modifiedCount) {
+            if (isReservation) {
+                await reservationProduct({ productId, quantity });
                 await expires(keyName, time);
                 return keyName;
             }

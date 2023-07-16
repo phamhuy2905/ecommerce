@@ -35,8 +35,7 @@ class ProductFactory {
             .sort()
             .search()
             .paginate();
-
-        const products = await data.query.populate("productShop", "fullName address");
+        const products = await data.query.populate("productShop", "fullName address avatar");
         return { products, page: products.length ? data.page : { itemsPerPage: 12, totalItems: 0, totalPage: 0 } };
     };
     static async getProductDetail(id) {

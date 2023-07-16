@@ -44,8 +44,10 @@ const userSchema = new Schema(
 
 userSchema.pre("save", function (next) {
     const salt = bcrypto.genSaltSync(10);
-    const hash = bcrypto.hashSync(this.password, salt);
-    this.password = hash;
+    if (this.password) {
+        const hash = bcrypto.hashSync(this.password, salt);
+        this.password = hash;
+    }
     next();
 });
 

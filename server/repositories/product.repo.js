@@ -28,14 +28,14 @@ const checkProductSever = async (products = [], shopId) => {
             }
             if (foundProduct.productAttribute.size?.length) {
                 if (!foundProduct.productAttribute.size.includes(val.size))
-                    throw new BadRequestError("Size bạn chọn đã hết hoặc không tồn tại!");
+                    throw new BadRequestError("Size bạn chọn vừa hết hoặc không tồn tại!");
             }
             if (foundProduct.productAttribute.color?.length) {
                 if (!foundProduct.productAttribute.color.includes(val.color))
-                    throw new BadRequestError("Màu bạn chọn đã hết hoặc không tồn tại!");
+                    throw new BadRequestError("Màu bạn chọn vừa hết hoặc không tồn tại!");
             }
             if (foundProduct.productQuantity < val.quantity) {
-                throw new BadRequestError("Số lượng sản phẩm vượt mức cho phép!");
+                throw new BadRequestError("Sản phẩm đã hết hàng hoặc không hợp lệ, vui lòng kiểm tra lại!");
             }
             if (foundProduct) {
                 if (val.discountCode) {
@@ -48,8 +48,9 @@ const checkProductSever = async (products = [], shopId) => {
                             discountCountUsed,
                             discountApply,
                             discountMaxUse,
-                            discountType,
                             discountUserAlreadyUsed,
+                            discountCode,
+                            discountType,
                             discountValue,
                             discoutMaxEachUser,
                             discountProductId,
@@ -61,8 +62,10 @@ const checkProductSever = async (products = [], shopId) => {
                                     return {
                                         productId: foundProduct._id,
                                         price: foundProduct.productPrice,
+                                        size: val.size,
+                                        color: val.color,
                                         quantity: val.quantity,
-                                        discountCode: val.discountCode,
+                                        discountCode,
                                         discountValue,
                                         discountType,
                                     };
@@ -74,6 +77,8 @@ const checkProductSever = async (products = [], shopId) => {
                 return {
                     productId: foundProduct._id,
                     price: foundProduct.productPrice,
+                    size: val.size,
+                    color: val.color,
                     quantity: val.quantity,
                     discountCode: null,
                     discountValue: 0,

@@ -50,10 +50,3 @@ app.use("/", (req, res, next) => {
         message: "Router not found",
     });
 });
-
-// const a = {
-//     manufacture: "Apple Store",
-//     material: "Gold",
-// };
-
-// console.log(JSON.stringify(a));

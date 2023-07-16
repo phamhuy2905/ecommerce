@@ -10,7 +10,7 @@ import { getLatestMessage } from "../../../../apis/chat.api";
 
 function ListChat() {
     const { profile } = useAuthContext();
-    const { listOnline, dataLatestMessage } = useSelector((state: RootState) => state.chat);
+    const { listOnline, dataLatestMessage, currentUserChat } = useSelector((state: RootState) => state.chat);
     if (!profile) return;
     const dispatch = useAppDispatch();
     const handleShowMessage = (shopId: string, shopName: string) => {
@@ -44,7 +44,9 @@ function ListChat() {
                     return (
                         <div
                             key={index}
-                            className=" relative mt-1 flex cursor-pointer bg-[#ebebeb] px-1 py-2"
+                            className={`relative mt-1 flex cursor-pointer px-1 py-2 ${
+                                currentUserChat === recevier._id ? "bg-[#ebebeb]" : "bg-white"
+                            }`}
                             onClick={() => handleShowMessage(recevier._id, recevier.fullName)}
                         >
                             <div className=" mt-2 h-[30px] w-[30px] overflow-hidden rounded-full">
@@ -56,11 +58,7 @@ function ListChat() {
                             </div>
                             <div className="ml-2">
                                 <p className="mb-1 text-[14px]">{recevier.fullName}</p>
-                                <p
-                                    className={`w-[140px] truncate text-[13px] text-gray-600 ${
-                                        val.isReaded ? "" : "font-bold"
-                                    }`}
-                                >
+                                <p className={`w-[140px] truncate text-[13px] text-gray-600 ${val.isReaded ? "" : ""}`}>
                                     {val.message}
                                 </p>
                             </div>

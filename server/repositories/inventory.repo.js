@@ -25,6 +25,7 @@ const reservationInventory = async ({ productId, quantity }) => {
     const inventory = await Inventory.findOneAndUpdate(
         {
             inventoryProduct: productId,
+            inventoryStock: { $gte: quantity },
         },
         { $inc: { inventoryStock: -quantity } },
         { new: true }

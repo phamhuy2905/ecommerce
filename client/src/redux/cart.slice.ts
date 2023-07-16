@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { clearLocalCart, getLocalCart, setLocalCart } from "../helpers/local.helper";
-import { CartProductType, CartType, initTialStateType } from "../types/slice/cart.type";
+import { CartProductType, CartType, initTialStateType, UpdateCartAfterOrderType } from "../types/slice/cart.type";
 
 const initialState: initTialStateType = getLocalCart() || {
     carts: [],
@@ -127,9 +127,33 @@ const cartSlice = createSlice({
                 0
             );
         },
+
+        updateCartAfterOrder(state, action: PayloadAction<UpdateCartAfterOrderType[]>) {
+            const payload = action.payload;
+            const arrShop = state.carts.map((item) => {
+                const arrProduct = item.itemProducts.filter((val) => {
+                    return !payload.some(
+                        (value) => value.productId === val.id && value.color === val.color && value.size === val.size
+                    );
+                });
+                return arrProduct.length
+                    ? {
+                          ...item,
+                          itemProducts: arrProduct,
+                          totalPrice: arrProduct.reduce((acc, curr) => acc + curr.quantity * curr.price, 0),
+                      }
+                    : null;
+            });
+            const filter = arrShop.filter((val) => val !== null) as CartType[];
+            const total = filter.reduce((acc, curr) => acc + curr.totalPrice, 0);
+            state.carts = filter;
+            state.total = total;
+            !total ? clearLocalCart() : setLocalCart({ carts: filter, metaTotal: 0, total });
+        },
     },
 });
 
-export const { addCart, removeItemCart, checkedCart, changeQuantity, checkedAllCart } = cartSlice.actions;
+export const { addCart, removeItemCart, checkedCart, changeQuantity, checkedAllCart, updateCartAfterOrder } =
+    cartSlice.actions;
 const cartReducer = cartSlice.reducer;
 export default cartReducer;

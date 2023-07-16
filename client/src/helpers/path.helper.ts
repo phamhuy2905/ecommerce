@@ -6,9 +6,12 @@ export const path = {
         register: "/register",
         detail: "/detail",
         cart: "/cart",
+        profile: "/profile",
+        order: "/order",
     },
     api: {
         static: "/static",
         product: "/product",
+        checkout: "/checkout",
     },
 };

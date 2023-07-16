@@ -20,9 +20,9 @@ function Product() {
     }, [data]);
     return (
         <div className="py-5">
-            <div className="xl:max-w-7xl  mx-auto px-4">
+            <div className="mx-auto  px-4 xl:max-w-7xl">
                 <Title header="Trending Products" label="See more" path="/shop-grid" />
-                <div className="grid grid-cols-4 gap-8 mt-3">
+                <div className="mt-3 grid grid-cols-4 gap-8">
                     {data?.data.data.products.map((product, index) => {
                         return (
                             <div key={index} className="">

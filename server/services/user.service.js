@@ -1,4 +1,4 @@
-const { ConflictError, BadRequestError, UnAuthorization } = require("../responPhrase/errorResponse");
+const { ConflictError, BadRequestError, UnAuthorization, ForbidentError } = require("../responPhrase/errorResponse");
 const { removeField, filterField } = require("../helper/helperField");
 const User = require("../models/user.model");
 const { createSecretKey, createTokenPair } = require("../helper/helperToken");
@@ -9,7 +9,9 @@ const {
     findByUserIdAndPull,
 } = require("./keyToken.service");
 const { generateCookie } = require("../helper/helperCookie");
-const KeyToken = require("../models/keyToken.model");
+const { removeInvalidFields } = require("../utils/nestedObj");
+const { validateCreatedOneImage } = require("../validation/image.validation");
+const { saveOneImage } = require("../utils/saveImage");
 
 class UserService {
     static register = async (req, res, next) => {
@@ -93,6 +95,31 @@ class UserService {
             { upsert: true, new: true }
         );
         return shop;
+    };
+
+    static updateProfile = async (req, res, next) => {
+        let avatar;
+        if (req.files.length) {
+            const file = validateCreatedOneImage(req.files, "avatar");
+            avatar = file ? saveOneImage({ width: 100, height: 100, file, path: "profile", name: "avatar" }) : null;
+        }
+        const body = removeInvalidFields(req.body);
+        const update = avatar ? { ...body, avatar } : body;
+        const user = await User.findByIdAndUpdate(req.userId, update, { new: true });
+        return user;
+    };
+
+    static updatePassword = async (req, res, next) => {
+        const { password } = req.body;
+        const user = await User.findById(req.userId);
+        const comparePassword = user.comparePassword(password, user.password);
+        if (!comparePassword) throw new ForbidentError("Mật khẩu không hợp lệ!");
+        user.password = password;
+        user.save();
+        return user;
+    };
+    static getProfile = async (req, res, next) => {
+        return await User.findById(req.userId).lean();
     };
 }
 

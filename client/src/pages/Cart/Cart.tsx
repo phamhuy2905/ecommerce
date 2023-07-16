@@ -11,6 +11,7 @@ import { useAuthContext } from "../../context/auth.context";
 function Cart() {
     const { profile } = useAuthContext();
     const { carts, metaTotal } = useSelector((state: RootState) => state.cart);
+
     const data = useMemo(() => {
         const shopOrders = carts
             .map((item) => {
@@ -35,6 +36,9 @@ function Cart() {
             .filter((val) => val);
         return shopOrders.length ? { userId: profile?._id, shopOrders } : null;
     }, [carts]);
+    if (!carts.length) {
+        return <h1>Khong co san pham nao</h1>;
+    }
     return (
         <div className="bg-[#f5f5f5] py-10">
             <div className="content">

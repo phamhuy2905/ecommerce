@@ -17,9 +17,18 @@ class UserController {
             data: await UserService.registerShop(req, res, next),
         }).send(res);
     });
+    static updateProfile = asyncHandel(async (req, res, next) => {
+        new OK({ data: await UserService.updateProfile(req, res, next) }).send(res);
+    });
+    static updatePassword = asyncHandel(async (req, res, next) => {
+        new OK({ data: await UserService.updatePassword(req, res, next) }).send(res);
+    });
 
     static handelRefreshToken = asyncHandel(async (req, res, next) => {
         new OK({ data: await UserService.handelRefreshToken(req, res, next) }).send(res);
+    });
+    static getProfile = asyncHandel(async (req, res, next) => {
+        new OK({ data: await UserService.getProfile(req, res, next) }).send(res);
     });
 }
 

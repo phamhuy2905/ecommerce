@@ -13,6 +13,7 @@ const orderSchema = new Schema(
                     shopId: {
                         type: mongoose.Types.ObjectId,
                         required: true,
+                        ref: "User",
                     },
                     itemProducts: {
                         type: [
@@ -20,6 +21,7 @@ const orderSchema = new Schema(
                                 productId: {
                                     type: mongoose.Types.ObjectId,
                                     required: true,
+                                    ref: "Product",
                                 },
                                 price: {
                                     type: Number,
@@ -31,11 +33,9 @@ const orderSchema = new Schema(
                                 },
                                 size: {
                                     type: String,
-                                    required: true,
                                 },
                                 color: {
                                     type: String,
-                                    required: true,
                                 },
                                 discountCode: {
                                     type: String,
@@ -60,13 +60,11 @@ const orderSchema = new Schema(
                         type: String,
                         default: "Unknow",
                     },
-                    isPublish: {
-                        type: Boolean,
-                        default: true,
+                    noteShop: {
+                        type: String,
                     },
                 },
             ],
-            _id: false,
         },
 
         orderShipping: {
@@ -86,11 +84,10 @@ const orderSchema = new Schema(
                 phoneNumber: {
                     type: String,
                 },
-                nameReceiver: {
+                nameRecipient: {
                     type: String,
                 },
             },
-            default: {},
             _id: false,
         },
         orderPayment: {

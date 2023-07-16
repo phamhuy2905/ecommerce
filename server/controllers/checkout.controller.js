@@ -26,6 +26,13 @@ class CheckOutController {
         };
         new OK({ data: await CheckOutSerive.deleteProductOrderSchema(data) }).send(res);
     });
+
+    static getOrder = asyncHandel(async (req, res, next) => {
+        new OK({ data: await CheckOutSerive.getOrder(req) }).send(res);
+    });
+    static getAllOrder = asyncHandel(async (req, res, next) => {
+        new OK({ data: await CheckOutSerive.getAllOrder(req) }).send(res);
+    });
 }
 
 module.exports = CheckOutController;

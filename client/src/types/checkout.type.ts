@@ -26,13 +26,13 @@ export interface ItemProduct {
 
 export interface NewItemProduct {
     productId: string;
-    price: number;
-    quantity: number;
-    size?: string;
-    color?: string;
-    discountCode?: string;
+    price: string | number;
+    quantity: string | number;
+    size: string | number;
+    color: string;
+    discountCode: string | null;
     discountValue: number;
-    discountType: string;
+    discountType?: string | null;
 }
 
 export interface DataTotal {
@@ -43,9 +43,32 @@ export interface DataTotal {
 }
 
 export interface NewShopOrder {
-    shopId: string;
-    itemProducts: NewItemProduct[];
+    newShopOrders: {
+        shopId: string;
+        itemProducts: NewItemProduct[];
+    }[];
     dataTotal: DataTotal;
 }
 
 export interface SuccessResponseRevireCheckout extends ResponseSuccessData<NewShopOrder> {}
+
+///
+export interface ShopOdersReviewType {
+    shopOrders: ItemShopOrderReviewType[];
+}
+
+export interface ItemShopOrderReviewType {
+    shopId: string;
+    itemProducts: ItemProductReviewType[];
+    noteShop?: string;
+}
+export interface ItemProductReviewType {
+    productId: string;
+    price: string | number;
+    quantity: string | number;
+    size: string | number;
+    color: string;
+    discountCode: string | null;
+    discountValue: number;
+    discountType?: string | null;
+}

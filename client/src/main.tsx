@@ -8,7 +8,7 @@ import GlobalStyles from "./components/GlobalStyles/GlobalStyles.tsx";
 import AuthProvider from "./context/auth.context.tsx";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.ts";
-
+import LoadingProvider from "./Admin/context/loading.context.tsx";
 export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
@@ -18,18 +18,19 @@ export const queryClient = new QueryClient({
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-    // <React.StrictMode>
     <BrowserRouter>
-        <AuthProvider>
-            <Provider store={store}>
-                <QueryClientProvider client={queryClient}>
-                    <ReactQueryDevtools initialIsOpen={false} />
-                    <GlobalStyles>
-                        <App />
-                    </GlobalStyles>
-                </QueryClientProvider>
-            </Provider>
-        </AuthProvider>
+        <LoadingProvider>
+            <AuthProvider>
+                <Provider store={store}>
+                    <QueryClientProvider client={queryClient}>
+                        <ReactQueryDevtools initialIsOpen={false} />
+                        <GlobalStyles>
+                            <App />
+                        </GlobalStyles>
+                    </QueryClientProvider>
+                </Provider>
+            </AuthProvider>
+        </LoadingProvider>
     </BrowserRouter>
     // </React.StrictMode>
 );

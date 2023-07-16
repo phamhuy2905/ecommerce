@@ -1,31 +1,54 @@
 import date from "date-and-time";
 import { CiDiscount1 } from "react-icons/ci";
 import Tippy from "@tippyjs/react/headless";
-
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { getDiscount } from "../../../../apis/discount.api";
 import { formatCoin } from "../../../../utils/format";
 import { queryClient } from "../../../../main";
-function Votcher({
-    discountShop,
-    handleTest,
-}: {
-    discountShop: string;
-    handleTest: ({ shopId, discountCode }: { shopId?: string; discountCode?: string }) => void;
-}) {
+import { RootState, useAppDispatch } from "../../../../redux/store";
+import { postCheckoutReview } from "../../../../redux/checkout.slice";
+import { useSelector } from "react-redux";
+import { useContextLoading } from "../../../../Admin/context/loading.context";
+import toast from "react-hot-toast";
+import { errorResponse } from "../../../../utils/error";
+function Votcher({ discountShop }: { discountShop: string }) {
     const [call, setCall] = useState<boolean>(false);
+    const dispatch = useAppDispatch();
+    const { shopOrders } = useSelector((state: RootState) => state.discount);
+    const { setIsLoading } = useContextLoading();
     const { data } = useQuery({
         queryKey: ["discount", discountShop],
         queryFn: () => getDiscount(discountShop),
         enabled: call,
     });
-
     const handleDiscount = () => {
         setCall(true);
         queryClient.invalidateQueries({
             queryKey: ["discount", discountShop],
         });
+    };
+    const handleApplyDiscount = ({ discountCode }: { discountCode: string }) => {
+        if (!discountCode) return;
+        const payload = shopOrders.map((val) => {
+            return {
+                ...val,
+                itemProducts: val.itemProducts.map((item) => ({
+                    ...item,
+                    discountCode:
+                        val.shopId === discountShop ? discountCode : item.discountCode ? item.discountCode : null,
+                })),
+            };
+        });
+        setIsLoading(true);
+        dispatch(postCheckoutReview({ shopOrders: payload }))
+            .unwrap()
+            .then(() => toast.success("Đã áp dụng votcher"))
+            .catch((err) => {
+                const error = errorResponse(err);
+                if (error) toast.error(error);
+            })
+            .finally(() => setIsLoading(false));
     };
     return (
         <div className="flex justify-end border-t-[1px] border-t-gray-300 px-2 py-2">
@@ -80,13 +103,12 @@ function Votcher({
                                                             </span>
                                                         </p>
                                                         <button
+                                                            className="rounded-[5px] bg-blue-500 px-2 py-1 text-[14px] text-white"
                                                             onClick={() =>
-                                                                handleTest({
+                                                                handleApplyDiscount({
                                                                     discountCode: val.discountCode,
-                                                                    shopId: discountShop,
                                                                 })
                                                             }
-                                                            className="rounded-[5px] bg-blue-500 px-2 py-1 text-[14px] text-white"
                                                         >
                                                             Áp dụng
                                                         </button>

@@ -1,9 +1,10 @@
+import { path } from "../helpers/path.helper";
 import { SuccessResponseRevireCheckout } from "../types/checkout.type";
 import http from "../utils/http";
 
-const checkoutApi = async (data: any) => {
-    const discount = await http.instance.post<SuccessResponseRevireCheckout>(`/checkout`, data);
+const checkoutReviewApi = async (data: any) => {
+    const discount = await http.instance.post<SuccessResponseRevireCheckout>(`${path.api.checkout}`, data);
     return discount.data.data;
 };
 
-export { checkoutApi };
+export { checkoutReviewApi };

@@ -28,3 +28,11 @@ export type AuthResponseLogin = ResponseSuccessData<{
 export type AuthResponseRegister = ResponseSuccessData<{
     user: UserType;
 }>;
+
+export interface UpdateProfileType {
+    fullName: string;
+    address: string;
+    address2: string;
+    phoneNumber: string | number;
+    email: string;
+}

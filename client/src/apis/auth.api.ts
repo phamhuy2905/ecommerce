@@ -1,5 +1,6 @@
 import { AuthLogin, AuthRegister, AuthResponseLogin, AuthResponseRegister } from "../types/auth.type";
 import { SuccessType } from "../types/success.type";
+import { ProfileResponseType } from "../types/user.type";
 import http from "../utils/http";
 
 export const authRegister = (data: Omit<AuthRegister, "password_confirm">) => {
@@ -16,4 +17,18 @@ export const refreshToken = async () => {
 
 export const authLogout = async () => {
     return await http.instance.post<SuccessType>("auth/logout");
+};
+
+export const authProfile = async () => {
+    const profile = await http.instance.get<ProfileResponseType>("auth/profile");
+    return profile.data;
+};
+
+export const updateProfile = async (data: any) => {
+    const profile = await http.instance.post<ProfileResponseType>("auth/updateProfile", data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+    return profile.data;
 };

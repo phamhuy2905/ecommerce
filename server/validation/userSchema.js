@@ -32,9 +32,39 @@ const registerShop = Joi.object({
         .required()
         .error((error) => customMessage(error, { fieldName: "New phoneNumber" })),
 });
+const updateProfile = Joi.object({
+    address: Joi.string()
+        .allow("")
+        .min(8)
+        .error((error) => customMessage(error, { fieldName: "address", min: 8 })),
+    address2: Joi.string()
+        .allow("")
+        .error((error) => customMessage(error, { fieldName: "address2", min: 8 })),
+    phoneNumber: Joi.number()
+        .allow("")
+        .min(10)
+        .error((error) => customMessage(error, { fieldName: "phoneNumber" })),
+    fullName: Joi.string()
+        .min(3)
+        .error((error) => customMessage(error, { fieldName: "Full name", min: 3 })),
+});
+const updatePassword = Joi.object({
+    password: Joi.string()
+        .required()
+        .min(8)
+        .label("Password")
+        .error((error) => customMessage(error, { fieldName: "Password", min: 8 })),
+    password_confirm: Joi.string()
+        .required()
+        .valid(Joi.ref("password"))
+        .label("Password_confirm")
+        .error((error) => customMessage(error, { fieldName: "Password_confirm", min: 8 })),
+});
 
 module.exports = {
     registerUserChema,
     loginUserChema,
     registerShop,
+    updateProfile,
+    updatePassword,
 };

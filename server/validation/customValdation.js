@@ -18,7 +18,6 @@ const dateValid = (value, helpers) => {
 
 const customMessage = (errors = [], { fieldName, max, min }) => {
     errors.forEach((err) => {
-        console.log(err.code);
         switch (err.code) {
             case "string.empty":
                 err.message = `Truờng ${fieldName} không được bỏ trống!`;

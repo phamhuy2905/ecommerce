@@ -7,6 +7,7 @@ interface initialStateType {
     listOnline: UserOnlineType[];
     dataMessage: { senderId: string; data: MessageType[] }[];
     dataLatestMessage: LatestMessage[];
+    currentUserChat: string;
 }
 const initialState: initialStateType = {
     isHiddentChat: true,
@@ -19,6 +20,7 @@ const initialState: initialStateType = {
     dataMessage: [],
     listOnline: [],
     dataLatestMessage: [],
+    currentUserChat: "",
 };
 
 const chatSlice = createSlice({
@@ -31,6 +33,7 @@ const chatSlice = createSlice({
         chooseShopChat: (state, action: PayloadAction<ChatType>) => {
             state.isHiddentChat = false;
             state.data = action.payload;
+            state.currentUserChat = action.payload.recevierId;
         },
         setUserOnline: (state, action: PayloadAction<UserOnlineType[]>) => {
             state.listOnline = action.payload;

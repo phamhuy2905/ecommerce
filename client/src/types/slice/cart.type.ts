@@ -22,3 +22,9 @@ export interface initTialStateType {
     total: number;
     metaTotal: number;
 }
+
+export interface UpdateCartAfterOrderType {
+    productId: string;
+    size: string | number;
+    color: string;
+}

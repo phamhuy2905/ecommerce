@@ -7,8 +7,9 @@ interface ModalType {
     children: React.ReactNode;
     isOpen: boolean;
     setIsOpen: any;
+    width?: string;
 }
-function Modal({ children, isOpen, setIsOpen }: ModalType) {
+function Modal({ children, isOpen, setIsOpen, width }: ModalType) {
     const { darkMode } = UseDarkModeContext();
     const overlay = useRef<HTMLDivElement>(null);
     const handelClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -34,9 +35,9 @@ function Modal({ children, isOpen, setIsOpen }: ModalType) {
                 }}
             >
                 <div
-                    className={`${
-                        darkMode ? "dark" : "bg-white"
-                    } relative left-[50%] top-[50%]  h-[670px] w-[50%] translate-x-[-50%] translate-y-[-50%] overflow-y-scroll px-4 py-5 shadow-lg`}
+                    className={`${darkMode ? "dark" : "bg-white"}  ${
+                        !width ? "w-[50%]" : width
+                    } relative left-[50%] top-[50%]  h-[670px]  translate-x-[-50%] translate-y-[-50%] overflow-y-scroll px-4 py-5 shadow-lg`}
                 >
                     <span
                         onClick={() => setIsOpen(false)}

@@ -1,4 +1,3 @@
-import "react-toastify/dist/ReactToastify.css";
 import InputForm from "../../../../../components/InputForm";
 import { AddProductType } from "../../../../../types/product.type";
 import { useForm } from "react-hook-form";

@@ -15,7 +15,6 @@ class http {
     private accessToken: string;
     profile: UserType;
     refreshToken: Promise<AxiosResponse<AuthResponseLogin, any>> | null;
-    contentType: boolean = true;
 
     constructor() {
         this.refreshToken = null;
@@ -24,8 +23,7 @@ class http {
         this.instance = axios.create({
             baseURL: "http://localhost:3001/api/v1/",
             headers: {
-                "Content-Type": this.contentType ? "application/json" : "multipart/form-data",
-                // "Content-Type": "multipart/form-data",
+                "Content-Type": "application/json",
             },
             withCredentials: true,
         });
