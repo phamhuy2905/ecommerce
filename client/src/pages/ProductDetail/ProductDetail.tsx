@@ -36,7 +36,7 @@ function ProductDetail() {
                             <p className="mb-4 text-[16px]">
                                 Giá hiện tại:{" "}
                                 <span className="text-[18px] font-semibold">
-                                    {formatCoin(product?.productPrice || 0)}
+                                    {formatCoin(+product?.productPrice || 0)}
                                 </span>
                             </p>
                             <p className="mb-4 text-[16px]">

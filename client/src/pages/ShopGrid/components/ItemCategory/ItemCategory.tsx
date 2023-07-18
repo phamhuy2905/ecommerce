@@ -18,16 +18,16 @@ function ItemCategory({ name, quantity }: { name: string; quantity: number }) {
                 q: name,
             } as any).toString()}`
         );
-    }, [name]);
+    }, [name, query]);
     return (
-        <li className="flex items-center justify-between px-4 cursor-pointer py-[2px] my-2 ">
+        <li className="my-2 flex cursor-pointer items-center justify-between px-4 py-[2px] ">
             <span
                 onClick={filterCategory}
-                className={cx("text-[15px] text-blue-400 hover:translate-x-3 transition-transform", { item: true })}
+                className={cx("text-[15px] text-blue-400 transition-transform hover:translate-x-3", { item: true })}
             >
                 {name}
             </span>
-            <span className="w-[25px] h-[25px] border-[1px] border-gray-200 rounded-[7px] text-[12px] flex items-center justify-center hover:bg-blue-400">
+            <span className="flex h-[25px] w-[25px] items-center justify-center rounded-[7px] border-[1px] border-gray-200 text-[12px] hover:bg-blue-400">
                 {quantity}
             </span>
         </li>

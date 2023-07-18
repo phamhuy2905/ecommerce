@@ -13,5 +13,6 @@ export const path = {
         static: "/static",
         product: "/product",
         checkout: "/checkout",
+        address: "/address",
     },
 };

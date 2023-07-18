@@ -71,21 +71,30 @@ const orderSchema = new Schema(
             type: {
                 ward: {
                     type: String,
+                    required: true,
                 },
                 district: {
                     type: String,
+                    required: true,
                 },
                 province: {
                     type: String,
+                    required: true,
                 },
                 address: {
+                    type: String,
+                    required: true,
+                },
+                address2: {
                     type: String,
                 },
                 phoneNumber: {
                     type: String,
+                    required: true,
                 },
-                nameRecipient: {
+                fullName: {
                     type: String,
+                    required: true,
                 },
             },
             _id: false,

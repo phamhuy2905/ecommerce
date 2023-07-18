@@ -23,7 +23,7 @@ function CheckOut() {
         return;
     }
     const dispatch = useAppDispatch();
-    const { shopOrders } = useSelector((state: RootState) => state.discount);
+    const { shopOrders, addressId } = useSelector((state: RootState) => state.discount);
     let decodeData;
     let data: CheckOutType;
     try {
@@ -50,7 +50,7 @@ function CheckOut() {
         };
     }, [shopOrders]);
     const handleCreateOrder = () => {
-        dispatch(createOrder({ shopOrders }))
+        dispatch(createOrder({ shopOrders, addressId }))
             .unwrap()
             .then(() => {
                 const updateCart = shopOrders

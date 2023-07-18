@@ -1,4 +1,5 @@
 const { del } = require("../helper/redis");
+const Address = require("../models/address.model");
 const Order = require("../models/order.model");
 const { incrDiscount } = require("../repositories/discont.repo");
 const { incrInventory } = require("../repositories/inventory.repo");
@@ -68,10 +69,25 @@ class CheckOutSerive {
             throw new BadRequestError("Có một vài sản phẩm vừa cập nhât, vui lòng qua lại giỏ hàng!");
         }
 
+        // orderShipping
+        const addressUser = await Address.findById(body.addressId).lean();
+        if (!addressUser) throw new BadRequestError("Địa chỉ không hợp lệ!");
+        const { province, district, ward, address, address2, fullName, phoneNumber } = addressUser;
+        const orderShipping = {
+            fullName,
+            phoneNumber,
+            province,
+            district,
+            ward,
+            address,
+            address2,
+        };
+
         const createdOrder = Order.create({
             shopOrders: newShopOrders,
             orderCheckOut: dataTotal,
             ...data,
+            orderShipping,
         });
         return createdOrder;
     };

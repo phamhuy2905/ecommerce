@@ -5,22 +5,29 @@ import { useAppDispatch } from "../../../../redux/store";
 import { addCart } from "../../../../redux/cart.slice";
 import toast, { Toaster } from "react-hot-toast";
 function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
-    const [size, setSize] = useState<string>("");
-    const [color, setColor] = useState<string>("");
+    const [size, setSize] = useState<{ info: string; message: string }>({ info: "", message: "" });
+    const [color, setColor] = useState<{ info: string; message: string }>({ info: "", message: "" });
     const [quantity, setQuantity] = useState<number>(1);
     const dispatch = useAppDispatch();
     const addToCart = () => {
-        if (!size) return;
+        if (product.productAttribute.size?.length && !size.info) {
+            setSize({ ...size, message: "Vui lòng chọn size" });
+            return;
+        }
+        if (product.productAttribute.color?.length && !color.info) {
+            setColor({ ...color, message: "Vui lòng chọn màu sắc" });
+            return;
+        }
         dispatch(
             addCart({
                 item: {
                     id: product._id,
                     quantity,
-                    size,
+                    size: size.info,
                     name: product.productName,
-                    price: product.productPrice,
+                    price: +product.productPrice,
                     thumbnail: product.productThumbnail,
-                    color,
+                    color: color.info,
                     isChecked: false,
                 },
                 shopId: product.productShop._id,
@@ -39,17 +46,19 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
                         {product?.productAttribute.color?.map((val, index) => {
                             return (
                                 <span
-                                    onClick={() => setColor(val)}
+                                    onClick={() => setColor({ info: val, message: "" })}
                                     key={index}
                                     className={`mr-3 h-[35px] w-[35px] cursor-pointer text-center text-[18px] font-semibold  leading-[35px]  ${
-                                        color === val ? "border-[2px] border-blue-400" : "border-[1px] border-gray-200"
+                                        color.info === val
+                                            ? "border-[2px] border-blue-400"
+                                            : "border-[1px] border-gray-200"
                                     }`}
                                 >
                                     {val}
                                 </span>
                             );
                         })}
-                        {!color && <span className="ml-3 text-[14px] text-red-500">{"Vui lòng chọn color"}</span>}
+                        {color.message && <span className="ml-3 text-[14px] text-red-500">{color.message}</span>}
                     </>
                 ) : (
                     <span>Unkown</span>
@@ -60,17 +69,17 @@ function FormProductDetail({ product }: { product: ProductTypeDetaill }) {
                 {product?.productAttribute.size?.map((val, index) => {
                     return (
                         <span
-                            onClick={() => setSize(val)}
                             key={index}
+                            onClick={() => setSize({ info: val, message: "" })}
                             className={`mr-3 h-[35px] w-[35px] cursor-pointer text-center text-[18px] font-semibold  leading-[35px]  ${
-                                size === val ? "border-[2px] border-blue-400" : "border-[1px] border-gray-200"
+                                size.info === val ? "border-[2px] border-blue-400" : "border-[1px] border-gray-200"
                             }`}
                         >
                             {val}
                         </span>
                     );
                 })}
-                {!size && <span className="ml-3 text-[14px] text-red-500">{"Vui lòng chọn size"}</span>}
+                {size.message && <span className="ml-3 text-[14px] text-red-500">{size.message}</span>}
             </p>
             <div className="mb-4 flex items-center ">
                 <div className="flex items-center bg-[#ddd]">

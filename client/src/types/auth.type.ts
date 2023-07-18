@@ -7,6 +7,8 @@ export interface UserType {
     email: string;
     role: TypeRole;
     avatar?: string;
+    address?: string;
+    address2?: string;
     // role: '0001' | '0002'
 }
 export interface AuthLogin {

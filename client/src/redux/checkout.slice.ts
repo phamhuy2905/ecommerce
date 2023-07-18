@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, type PayloadAction, AsyncThunk } from "@reduxjs/toolkit";
 import {
     CheckOutType,
     ItemProductReviewType,
@@ -6,19 +6,31 @@ import {
     SuccessResponseRevireCheckout,
 } from "../types/checkout.type";
 import http from "../utils/http";
+import { SaveAddressType } from "../types/address.type";
+
+type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
+
+type PendingAction = ReturnType<GenericAsyncThunk["pending"]>;
+type RejectedAction = ReturnType<GenericAsyncThunk["rejected"]>;
+type FulfilledAction = ReturnType<GenericAsyncThunk["fulfilled"]>;
 
 export const postCheckoutReview = createAsyncThunk("checkout/review", async (data: any, _thunkApi) => {
     const review = await http.instance.post<SuccessResponseRevireCheckout>("checkout", data);
     return review.data.data;
 });
 export const createOrder = createAsyncThunk("checkout/created", async (data: any, _thunkApi) => {
-    const newOrder = await http.instance.post<any>("checkout/created", data);
-    return newOrder.data;
+    try {
+        const newOrder = await http.instance.post<SuccessResponseRevireCheckout>("checkout/created", data);
+        return newOrder.data;
+    } catch (error: any) {
+        if (error.name === "AxiosError") return _thunkApi.rejectWithValue(error);
+    }
 });
 
 interface initialStateType {
     discountShop: CalcDiscountType[];
     shopOrders: ItemShopOrderReviewType[];
+    addressId: string;
 }
 interface CalcDiscountType {
     id: string;
@@ -28,6 +40,7 @@ interface CalcDiscountType {
 const initialState: initialStateType = {
     discountShop: [],
     shopOrders: [],
+    addressId: "",
 };
 
 const discountSlice = createSlice({
@@ -76,17 +89,24 @@ const discountSlice = createSlice({
             if (foundShop === -1) return;
             state.shopOrders[foundShop].noteShop = action.payload.node;
         },
+        confirmAddressId(state, action: PayloadAction<string>) {
+            state.addressId = action.payload;
+        },
     },
     extraReducers(builder) {
         builder.addCase(postCheckoutReview.fulfilled, (state, action) => {
             state.shopOrders = action.payload.newShopOrders;
         });
-        builder.addCase(createOrder.fulfilled, (state, action) => {
-            console.log(action.payload);
-        });
+        builder
+            .addCase(createOrder.fulfilled, (state, action) => {})
+            .addMatcher<RejectedAction>(
+                (action) => action.type.endsWith("/rejected"),
+                (state, action) => {}
+            );
     },
 });
 
 const discountReducer = discountSlice.reducer;
-export const { calcDiscount, checkOutReview, dispatchCheckOutDiscount, dispatchCheckOutNote } = discountSlice.actions;
+export const { calcDiscount, checkOutReview, dispatchCheckOutDiscount, dispatchCheckOutNote, confirmAddressId } =
+    discountSlice.actions;
 export default discountReducer;

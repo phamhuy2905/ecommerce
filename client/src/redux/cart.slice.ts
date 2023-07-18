@@ -54,12 +54,15 @@ const cartSlice = createSlice({
             action: PayloadAction<{ productId: string; shopId: string; size: string; color: string }>
         ) {
             const payload = action.payload;
-            const foundShop = state.carts.findIndex((val) => (val.shopId = payload.shopId));
+            const foundShop = state.carts.findIndex((val) => val.shopId === payload.shopId);
+
             if (foundShop === -1) return;
             const foundProduct = state.carts[foundShop].itemProducts.findIndex(
                 (val) => val.id === payload.productId && val.color === payload.color && val.size === payload.size
             );
+
             if (foundProduct === -1) return;
+
             state.carts[foundShop].itemProducts.splice(foundProduct, 1);
             if (!state.carts[foundShop].itemProducts.length) {
                 state.carts = state.carts.filter((val) => val.shopId !== payload.shopId);
@@ -117,7 +120,11 @@ const cartSlice = createSlice({
             state.carts.forEach((val) => {
                 val.itemProducts.forEach((item) => {
                     if (item.id === idProduct && item.color === color && item.size === size) {
-                        type === "incr" ? (item.quantity += 1) : (item.quantity -= 1);
+                        type === "incr"
+                            ? (item.quantity += 1)
+                            : item.quantity > 1
+                            ? (item.quantity -= 1)
+                            : item.quantity;
                     }
                 });
             });

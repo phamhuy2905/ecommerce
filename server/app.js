@@ -15,6 +15,7 @@ const discountRouter = require("./routers/discount.router");
 const checkoutRouter = require("./routers/checkout.router");
 const staticRouter = require("./routers/static.route");
 const chatRouter = require("./routers/chat.route");
+const addressRouter = require("./routers/address.router");
 /* router */
 
 app.use(
@@ -40,6 +41,7 @@ app.use("/api/v1/discount", discountRouter);
 app.use("/api/v1/checkout", checkoutRouter);
 app.use("/api/v1/static", staticRouter);
 app.use("/api/v1/chat", chatRouter);
+app.use("/api/v1/address", addressRouter);
 /* router */
 
 app.use(globalMiddleware);

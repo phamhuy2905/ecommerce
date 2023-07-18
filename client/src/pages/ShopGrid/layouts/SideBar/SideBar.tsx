@@ -30,39 +30,39 @@ function SideBar() {
     }, [maxPrice, minPrice]);
     return (
         <>
-            <div className="grid grid-cols-2 gap-x-3 mt-2">
+            <div className="mt-2 grid grid-cols-2 gap-x-3">
                 <div className="flex flex-col ">
-                    <span className="text-secondary select-none text-sm font-medium mb-1">From</span>
-                    <div className="p-3 flex gap-x-2 border border-gray-400 rounded-sm">
-                        <span className="text-secondary font-semibold text-sm">VND</span>
+                    <span className="text-secondary mb-1 select-none text-sm font-medium">From</span>
+                    <div className="flex gap-x-2 rounded-sm border border-gray-400 p-3">
+                        <span className="text-secondary text-sm font-semibold">VND</span>
                         <input
-                            className="outline-none w-full text-secondary text-xs font-light"
+                            className="text-secondary w-full text-xs font-light outline-none"
                             value={minPrice}
                             onChange={(e) => setMinPrice(+e.target.value >= 0 ? +e.target.value : minPrice)}
                         />
                     </div>
                 </div>
                 <div className="flex flex-col ">
-                    <span className="text-secondary select-none text-sm font-medium mb-1">To</span>
-                    <div className="p-3 flex gap-x-2 border border-gray-400 rounded-sm">
-                        <span className="text-secondary font-semibold text-sm">VND</span>
+                    <span className="text-secondary mb-1 select-none text-sm font-medium">To</span>
+                    <div className="flex gap-x-2 rounded-sm border border-gray-400 p-3">
+                        <span className="text-secondary text-sm font-semibold">VND</span>
                         <input
-                            className="outline-none w-full text-secondary text-xs font-light"
+                            className="text-secondary w-full text-xs font-light outline-none"
                             value={maxPrice}
                             onChange={(e) => setMaxPrice(+e.target.value >= 0 ? +e.target.value : maxPrice)}
                         />
                     </div>
                 </div>
             </div>
-            <button onClick={filterPrice} className="text-[14px] text-white rounded-[5px] py-2 px-5 bg-blue-500 mt-3">
+            <button onClick={filterPrice} className="mt-3 rounded-[5px] bg-blue-500 px-5 py-2 text-[14px] text-white">
                 Filter
             </button>
             <Category />
-            <div className="flex flex-col mt-3">
-                <p className="text-[18px] text-black font-semibold py-2 px-2 border-b-[1px] border-gray-300">
+            <div className="mt-3 flex flex-col">
+                <p className="border-b-[1px] border-gray-300 px-2 py-2 text-[18px] font-semibold text-black">
                     Thương hiệu
                 </p>
-                <ul className="py-2 max-h-[200px] overflow-y-auto">
+                <ul className="max-h-[200px] overflow-y-auto py-2">
                     <InputChecked name="Apple" />
                     <InputChecked name="Samsunf" />
                     <InputChecked name="Louis vuitton" />
@@ -70,9 +70,9 @@ function SideBar() {
                 </ul>
             </div>
 
-            <div className="flex flex-col mt-3">
-                <p className="text-[18px] text-black font-semibold py-2 px-2 border-b-[1px] border-gray-300">Nơi bán</p>
-                <ul className="py-2 max-h-[280px] overflow-y-scroll scroll">
+            <div className="mt-3 flex flex-col">
+                <p className="border-b-[1px] border-gray-300 px-2 py-2 text-[18px] font-semibold text-black">Nơi bán</p>
+                <ul className="scroll max-h-[280px] overflow-y-scroll py-2">
                     <InputChecked name="Hồ Chí Minh" />
                     <InputChecked name="Buôn Ma Thuột" />
                     <InputChecked name="Vinh" />
@@ -80,8 +80,8 @@ function SideBar() {
                 </ul>
             </div>
 
-            <div className="flex flex-col mt-3">
-                <p className="text-[18px] text-black font-semibold py-2 px-2 border-b-[1px] border-gray-300">
+            <div className="mt-3 flex flex-col">
+                <p className="border-b-[1px] border-gray-300 px-2 py-2 text-[18px] font-semibold text-black">
                     Khuyến mãi
                 </p>
                 <ul className="py-2 ">

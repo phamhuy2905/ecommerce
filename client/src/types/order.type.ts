@@ -6,6 +6,7 @@ export interface Orders {
     shopOrders: ShopOrder[];
     orderPayment: string;
     orderCheckOut: OrderCheckOut;
+    orderShipping: OderShpping;
     createdAt: string;
     updatedAt: string;
     __v: number;
@@ -51,6 +52,15 @@ export interface OrderCheckOut {
     totalDiscount: number;
     totalBalance: number;
     totalShipping: number;
+}
+export interface OderShpping {
+    province: string;
+    district: string;
+    ward: string;
+    address: string;
+    address2?: string;
+    fullName: string;
+    phoneNumber: string | number;
 }
 
 export interface SuccessResponseOrder extends ResponseSuccessData<Orders[]> {}

@@ -18,15 +18,20 @@ function MyOrder() {
         <div className="content">
             <h2 className="mb-5 mt-3 text-[30px] font-semibold text-gray-500">Đơn mua</h2>
             {data.map((order, keyIndex) => {
+                const { address, address2, fullName, phoneNumber, province, district, ward } = order.orderShipping;
                 return (
                     <div className="my-10 border-2 border-dashed border-[#ddd] bg-[#f5f5f5] py-3" key={keyIndex}>
                         <div className="content">
                             <div className="bg-white px-3 py-3">
-                                <h4 className="mb-3 text-[20px] text-blue-600">Địa chỉ nhận hàng</h4>
+                                <h4 className="mb-3 text-[20px] text-blue-600">Thông tin nhận hàng</h4>
                                 <div className="flex items-center justify-between">
                                     <p className="text-[15px] text-gray-500">
-                                        Phạm Trung Huy (+84) 782515479 566/43/17 Nguyễn Thái Sơn, Phường 5, Quận Gò Vấp,
-                                        TP. Hồ Chí Minh
+                                        Người nhận: {`${fullName} +84(${phoneNumber}) `}
+                                    </p>
+                                    <p className="text-[15px] text-gray-500">
+                                        {`Địa chỉ: ${address2 ? address2 : ""} ${", " + address}${", " + ward}${
+                                            ", " + district
+                                        }${", " + province}`}
                                     </p>
                                 </div>
                             </div>

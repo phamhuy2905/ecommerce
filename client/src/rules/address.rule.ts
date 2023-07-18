@@ -3,6 +3,7 @@ import { RegisterOptions } from "react-hook-form";
 export interface AddressFormType {
     fullName: string;
     phoneNumber: string | number;
+    address: string;
     address2: string;
 }
 export interface AddressVietNam {
@@ -23,9 +24,23 @@ export interface HiddentAddressVietNam {
 type RuleAddressForm = { [key in keyof AddressFormType]: RegisterOptions };
 export const addressFormRule: RuleAddressForm = {
     fullName: {
+        required: {
+            value: true,
+            message: "Trường fullName thì bắt buộc!",
+        },
+        minLength: {
+            value: 3,
+            message: "Trường fullName tối thiểu 3 kí tự!",
+        },
+    },
+    address: {
+        required: {
+            value: true,
+            message: "Trường address thì bắt buộc!",
+        },
         minLength: {
             value: 6,
-            message: "Trường fullName tối thiểu 6 kí tự!",
+            message: "Trường address2 tối thiểu 6 kí tự!",
         },
     },
     address2: {
@@ -35,6 +50,10 @@ export const addressFormRule: RuleAddressForm = {
         },
     },
     phoneNumber: {
+        required: {
+            value: true,
+            message: "Trường phoneNumber thì bắt buộc!",
+        },
         minLength: {
             value: 10,
             message: "Trường phoneNumber tối thiểu 10 kí tự!",
