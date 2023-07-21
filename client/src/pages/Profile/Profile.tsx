@@ -12,11 +12,8 @@ import { errorResponse } from "../../utils/error";
 import { UpdateProfileType } from "../../types/auth.type";
 import { useAuthContext } from "../../context/auth.context";
 import { saveProfileLocal } from "../../helpers/local.helper";
-const defaultValues = {
+const defaultValues: UpdateProfileType = {
     fullName: "",
-    address: "",
-    address2: "",
-    phoneNumber: "",
     email: "",
 };
 function Profile() {
@@ -35,12 +32,9 @@ function Profile() {
         queryKey: ["profile"],
         queryFn: () => authProfile(),
         onSuccess: (res) => {
-            const { fullName, address2, address, phoneNumber, email } = res.data;
+            const { fullName, email } = res.data;
             setValue("email", email);
             setValue("fullName", fullName);
-            setValue("address", address ? address : "");
-            setValue("address2", address2 ? address2 : "");
-            setValue("phoneNumber", phoneNumber ? phoneNumber : "");
         },
     });
     const { mutate } = useMutation({
@@ -54,8 +48,8 @@ function Profile() {
         dataForm.delete("email");
         mutate(dataForm, {
             onSuccess: (res) => {
-                const { _id, avatar, email, fullName } = res.data;
-                const newProfile = { _id, email, fullName, avatar, role: profileAuth?.role! };
+                const { _id, avatar, email, fullName, role } = res.data;
+                const newProfile = { _id, email, fullName, avatar, role };
                 setProfile(newProfile);
                 saveProfileLocal(newProfile);
                 navigate("/", {
@@ -127,31 +121,6 @@ function Profile() {
                     title="Họ và tên"
                     rule={profileRule.fullName}
                 />
-                <InputForm
-                    name="phoneNumber"
-                    register={register}
-                    placeholder="Vui lòng nhập số điện thoại của bạn"
-                    messageError={errors.phoneNumber?.message}
-                    title="Số điện thoại"
-                    rule={profileRule.phoneNumber}
-                />
-                <InputForm
-                    name="address"
-                    register={register}
-                    placeholder="Vui lòng nhập địa chỉ của bạn"
-                    messageError={errors.address?.message}
-                    title="Địa chỉ"
-                    rule={profileRule.address}
-                />
-                <InputForm
-                    name="address2"
-                    register={register}
-                    placeholder="Vui lòng nhập địa chỉ chi tiết của bạn"
-                    messageError={errors.address2?.message}
-                    title="Địa chỉ chi tiết(không bắt buộc)"
-                    rule={profileRule.address2}
-                />
-                {/* <InputProfile htmlFor="name" label="Name" value={name} setValue={setName} /> */}
             </div>
             <button
                 type="button"

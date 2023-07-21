@@ -14,6 +14,8 @@ import { omit } from "lodash";
 import { useAppDispatch } from "../../../redux/store";
 import { postProductAdmin } from "../../../redux/actions/productAdmin.slice";
 import { errorResponse } from "../../../utils/error";
+import { useQuery } from "react-query";
+import { getCategoryAdmin } from "../../apis/static.api";
 
 function AddProduct() {
     const { darkMode } = UseDarkModeContext();
@@ -53,11 +55,18 @@ function AddProduct() {
                 setArrSize([]);
                 setThumbnail(null);
                 setMultipleThumbnail([]);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
             })
             .catch((err) => {
                 const error = errorResponse(err);
                 toast.error(error || "Something wrong!!!");
             });
+    });
+    const { data = [] } = useQuery({
+        queryKey: ["categoryAdmin"],
+        queryFn: getCategoryAdmin,
     });
 
     return (

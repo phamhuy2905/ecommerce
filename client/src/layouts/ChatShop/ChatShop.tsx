@@ -5,7 +5,6 @@ import { changeStatusChat } from "../../redux/actions/chat.slice";
 import DataMessage from "./components/DataMessage";
 function ChatShop() {
     const dispatch = useAppDispatch();
-
     return (
         <div
             className="fixed bottom-0 right-0 z-20 h-[500px] w-[640px] bg-white"

@@ -28,7 +28,13 @@ class UserService {
 
     static login = async (req, res, next) => {
         const { email, password } = req.body;
-        const user = await User.findOne({ email: email }).select({ password: 1, fullName: 1, email: 1, role: 1 });
+        const user = await User.findOne({ email: email }).select({
+            password: 1,
+            fullName: 1,
+            email: 1,
+            role: 1,
+            avatar: 1,
+        });
         if (!user) throw new UnAuthorization("Email hoặc mật khẩu không hợp lệ");
 
         const compare = await user.comparePassword(password, user.password);
@@ -46,7 +52,7 @@ class UserService {
         if (!keyToken) throw new BadRequestError();
         generateCookie(res, "refreshToken", refreshToken);
         return {
-            user: filterField(user, "_id", "email", "fullName", "role"),
+            user: filterField(user, "_id", "email", "fullName", "role", "avatar"),
             accessToken,
         };
     };
@@ -84,24 +90,26 @@ class UserService {
     };
 
     static registerShop = async (req, res, next) => {
-        const shop = await User.findByIdAndUpdate(
-            req.userId,
-            {
-                address: req.address,
-                address2: req.address2,
-                phoneNumber: req.phoneNumber,
-                role: "0002",
-            },
-            { upsert: true, new: true }
-        );
-        return shop;
+        let avatar;
+        if (req.files.length) {
+            const file = validateCreatedOneImage(req.files, "avatar");
+            avatar = file
+                ? await saveOneImage({ width: 100, height: 100, file, path: "profile", name: "avatar" })
+                : null;
+        }
+        const body = removeInvalidFields(req.body);
+        const update = avatar ? { ...body, avatar, role: "0002" } : { ...body, role: "0002" };
+        const user = await User.findByIdAndUpdate(req.userId, update, { new: true });
+        return user;
     };
 
     static updateProfile = async (req, res, next) => {
         let avatar;
         if (req.files.length) {
             const file = validateCreatedOneImage(req.files, "avatar");
-            avatar = file ? saveOneImage({ width: 100, height: 100, file, path: "profile", name: "avatar" }) : null;
+            avatar = file
+                ? await saveOneImage({ width: 100, height: 100, file, path: "profile", name: "avatar" })
+                : null;
         }
         const body = removeInvalidFields(req.body);
         const update = avatar ? { ...body, avatar } : body;

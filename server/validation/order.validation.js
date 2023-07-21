@@ -48,14 +48,13 @@ const createOrder = Joi.object({
     addressId: Joi.required().custom(objectId),
 });
 
-const deleteProductOrderSchema = Joi.object({
+const cancelOrder = Joi.object({
     shopId: Joi.custom(objectId).required(),
     reasonCancel: Joi.string().default("Unknown"),
-    orderStatus: Joi.string().valid("cancel_by_user", "cancel_by_shop").default("cancel_by_user"),
 });
 
 module.exports = {
     checkOutSchema,
-    deleteProductOrderSchema,
+    cancelOrder,
     createOrder,
 };

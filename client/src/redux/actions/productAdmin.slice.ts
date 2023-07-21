@@ -14,8 +14,11 @@ export const getProductAdmin = createAsyncThunk("product/get", async (page: numb
     return products.data.data;
 });
 export const postProductAdmin = createAsyncThunk("product/add", async (data: FormData, _thunkAPI) => {
-    http.contentType = false;
-    const product = await http.instance.post<ProductDetailResponseType>(`${path.api.product}`, data);
+    const product = await http.instance.post<ProductDetailResponseType>(`${path.api.product}`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
     return product.data.data;
 });
 export const getProductDetailAdmin = createAsyncThunk("product/detail", async (id: string, _thunkAPI) => {
@@ -26,13 +29,15 @@ export const getProductDetailAdmin = createAsyncThunk("product/detail", async (i
 export const editProductAdmin = createAsyncThunk(
     "product/edit",
     async ({ id, data }: { data: FormData; id: string }, _thunkAPI) => {
-        http.contentType = false;
-        const product = await http.instance.patch<ProductDetailResponseType>(`${path.api.product}/${id}`, data);
+        const product = await http.instance.patch<ProductDetailResponseType>(`${path.api.product}/${id}`, data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
         return product.data.data;
     }
 );
 export const deleteProductAdmin = createAsyncThunk("product/delete", async (id: string, _thunkAPI) => {
-    http.contentType = false;
     const product = await http.instance.patch<SuccessType>(`${path.api.product}/delete/${id}`);
     return {
         ...product,

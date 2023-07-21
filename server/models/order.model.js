@@ -6,6 +6,7 @@ const orderSchema = new Schema(
         userId: {
             type: mongoose.Types.ObjectId,
             required: true,
+            ref: "User",
         },
         shopOrders: {
             type: [
@@ -53,7 +54,15 @@ const orderSchema = new Schema(
                     },
                     orderStatus: {
                         type: String,
-                        enum: ["pending", "confirmed", "shipped", "cancel_by_user", "cancel_by_shop", "deliverid"],
+                        enum: [
+                            "pending",
+                            "confirmed",
+                            "shipped",
+                            "cancel_by_user",
+                            "cancel_by_shop",
+                            "cancel_by_admin",
+                            "deliverid",
+                        ],
                         default: "pending",
                     },
                     reasonCancel: {
@@ -62,6 +71,10 @@ const orderSchema = new Schema(
                     },
                     noteShop: {
                         type: String,
+                    },
+                    requestCancel: {
+                        type: Boolean,
+                        default: false,
                     },
                 },
             ],

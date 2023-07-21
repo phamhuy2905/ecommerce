@@ -5,7 +5,12 @@ const { Types } = require("mongoose");
 const { createInventory, updateInventory } = require("../repositories/inventory.repo");
 const { findCategoryAndUpdate } = require("../repositories/category.repo");
 const ApiFeatured = require("../utils/apiFeatured");
-const { validateCreatedOneImage, validateCreatedMultipleImage } = require("../validation/image.validation");
+const {
+    validateCreatedOneImage,
+    validateCreatedMultipleImage,
+    validateUpdatedOneImage,
+    validateUpdateMultipleImage,
+} = require("../validation/image.validation");
 const { saveOneImage, saveImages } = require("../utils/saveImage");
 class ProductFactory {
     static productRegistry = {};
@@ -18,12 +23,12 @@ class ProductFactory {
         if (!productClass) throw new BadRequestError("Type product wrong!!");
         return new productClass(payload).createProduct(files);
     }
-    static async updateProduct({ type, id, payload }) {
+    static async updateProduct({ type, id, payload, files, fileDel }) {
         delete payload.productType;
         const body = removeInvalidFields(payload);
         const productClass = ProductFactory.productRegistry[type];
         if (!productClass) throw new BadRequestError("Type product wrong!!");
-        return new productClass(body).updateProduct(new Types.ObjectId(id));
+        return new productClass(body).updateProduct(new Types.ObjectId(id), files, fileDel);
     }
     static async deleteSoftProduct(id) {
         return await Product.findByIdAndUpdate(id, { isPublish: false }, { new: true });
@@ -95,16 +100,28 @@ class ProductService {
         const productMultipleThumbnail = validateCreatedMultipleImage(files, "productMultipleThumbnail");
         return { productThumbnail, productMultipleThumbnail };
     }
-    saveImage(files) {
+    async handleImage(id, files, fileDels) {
+        const product = await Product.findById(id);
+        const productThumbnail = validateUpdatedOneImage(files, "productThumbnail");
+        const { newFile, oldFile, fileDel } = validateUpdateMultipleImage(
+            req.files || [],
+            product.productMultipleThumbnail,
+            fileDel || [],
+            "productMultipleThumbnail"
+        );
+        console.log(productThumbnail);
+        console.log(newFile, oldFile, fileDel);
+    }
+    async saveImage(files) {
         const { productThumbnail, productMultipleThumbnail } = this.validateThumbnail(files);
-        const newThumbnail = saveOneImage({
+        const newThumbnail = await saveOneImage({
             width: 280,
             height: 330,
             file: productThumbnail,
             name: "thumbnail",
             path: "product",
         });
-        const newMultipleThumbnail = saveImages({
+        const newMultipleThumbnail = await saveImages({
             width: 280,
             height: 330,
             files: productMultipleThumbnail,
@@ -146,7 +163,7 @@ class ClothingService extends ProductService {
         if (foundProduct) {
             throw new ConflictError("Tên sản phẩm đã tồn tại!");
         }
-        const { productThumbnail, productMultipleThumbnail } = this.saveImage(files);
+        const { productThumbnail, productMultipleThumbnail } = await this.saveImage(files);
         this.productThumbnail = productThumbnail;
         this.productMultipleThumbnail = productMultipleThumbnail;
 
@@ -176,7 +193,7 @@ class ElectronicService extends ProductService {
         if (foundProduct) {
             throw new ConflictError("Tên sản phẩm đã tồn tại!");
         }
-        const { productThumbnail, productMultipleThumbnail } = this.saveImage(files);
+        const { productThumbnail, productMultipleThumbnail } = await this.saveImage(files);
         this.productThumbnail = productThumbnail;
         this.productMultipleThumbnail = productMultipleThumbnail;
 

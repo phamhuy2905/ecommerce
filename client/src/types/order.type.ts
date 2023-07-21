@@ -6,7 +6,7 @@ export interface Orders {
     shopOrders: ShopOrder[];
     orderPayment: string;
     orderCheckOut: OrderCheckOut;
-    orderShipping: OderShpping;
+    orderShipping: OderShipping;
     createdAt: string;
     updatedAt: string;
     __v: number;
@@ -15,9 +15,17 @@ export interface Orders {
 export interface ShopOrder {
     shopId: ShopId;
     itemProducts: ItemProductOrder[];
-    orderStatus: string;
+    orderStatus:
+        | "pending"
+        | "shipped"
+        | "confirmed"
+        | "cancel_by_user"
+        | "cancel_by_shop"
+        | "cancel_by_admin"
+        | "deliverid";
     reasonCancel: string;
     noteShop?: string;
+    requestCancel: boolean;
     _id: string;
 }
 
@@ -33,7 +41,7 @@ export interface ItemProductOrder {
     quantity: number;
     size: string;
     color: string;
-    discountCode: string;
+    discountCode: string | null;
     discountValue: number;
     discountType: "amount" | "percen";
     _id: string;
@@ -53,7 +61,7 @@ export interface OrderCheckOut {
     totalBalance: number;
     totalShipping: number;
 }
-export interface OderShpping {
+export interface OderShipping {
     province: string;
     district: string;
     ward: string;

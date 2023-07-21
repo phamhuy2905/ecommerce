@@ -1,6 +1,6 @@
 import { ResponseSuccessData } from "./success.type";
 
-type TypeRole = "0001" | "0002";
+type TypeRole = "0001" | "0002" | "0003";
 export interface UserType {
     _id: string;
     fullName: string;
@@ -32,6 +32,11 @@ export type AuthResponseRegister = ResponseSuccessData<{
 }>;
 
 export interface UpdateProfileType {
+    fullName: string;
+    email: string;
+}
+
+export interface RegisterShopType {
     fullName: string;
     address: string;
     address2: string;

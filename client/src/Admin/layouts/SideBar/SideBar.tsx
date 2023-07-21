@@ -1,4 +1,4 @@
-import { Link, LinkProps } from "react-router-dom";
+import { Link, LinkProps, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { useState } from "react";
 import { AiOutlineHome, AiOutlineShoppingCart, AiOutlineUser, AiOutlineSetting } from "react-icons/ai";
@@ -9,6 +9,7 @@ import { FaBars } from "react-icons/fa";
 import { UseSideBarContext } from "../../context/sidebar.context";
 import { useLocation } from "react-router-dom";
 import { UseDarkModeContext } from "../../context/darkMode.context";
+import { path } from "../../../helpers/path.helper";
 
 interface ChildrenFakeType {
     id: number;
@@ -28,35 +29,24 @@ const fake: FakeType[] = [
         id: 1,
         title: "Home",
         icon: <AiOutlineHome />,
-        path: "/admin",
-    },
-    {
-        id: 100,
-        title: "Category",
-        icon: <AiOutlineShoppingCart />,
-        path: "/admin/category",
+        path: path.server.home,
     },
 
     {
         id: 2,
         title: "Products",
         icon: <HiOutlineDatabase />,
-        path: "/admin/product",
+        path: path.server.product.all,
         children: [
             {
                 id: 1,
                 title: "All Product",
-                path: "/admin/product",
+                path: path.server.product.all,
             },
             {
                 id: 2,
                 title: "Add Product",
-                path: "/admin/add-product",
-            },
-            {
-                id: 3,
-                title: "Recently Product",
-                path: "/admin/recently-product",
+                path: path.server.product.add,
             },
         ],
     },
@@ -64,43 +54,25 @@ const fake: FakeType[] = [
         id: 3,
         title: "Orders",
         icon: <AiOutlineShoppingCart />,
-        path: "/admin/order",
+        path: path.server.order.all,
         children: [
             {
                 id: 1,
                 title: "All Order",
-                path: "/admin/all-order",
+                path: path.server.order.all,
             },
             {
                 id: 2,
                 title: "Order Pending",
-                path: "/admin/pending-order",
+                path: path.server.order.pending,
             },
         ],
     },
     {
         id: 4,
-        title: "Users",
-        icon: <AiOutlineUser />,
-        path: "/admin/user",
-        children: [
-            {
-                id: 1,
-                title: "User Active",
-                path: "/admin/active-user",
-            },
-            {
-                id: 2,
-                title: "User Inactive",
-                path: "/admin/inactive-user",
-            },
-        ],
-    },
-    {
-        id: 5,
-        title: "Setting",
+        title: "Quay lại trang chủ",
         icon: <AiOutlineSetting />,
-        path: "/admin/settings",
+        path: "/",
     },
 ];
 
@@ -196,11 +168,19 @@ function SideBar() {
                                             >
                                                 {val.children.map((item) => {
                                                     return (
-                                                        <li className="mt-3 flex items-center " key={item.id}>
-                                                            <RxDot className="mr-2 text-[25px]" />
-                                                            <Link to={item.path}>
+                                                        <li className="mt-3  " key={item.id}>
+                                                            <NavLink
+                                                                end={true}
+                                                                to={item.path}
+                                                                className={(props) =>
+                                                                    props.isActive
+                                                                        ? "flex items-center bg-blue-200"
+                                                                        : "flex items-center "
+                                                                }
+                                                            >
+                                                                <RxDot className="mr-2 text-[25px]" />
                                                                 <p className="">{item.title}</p>
-                                                            </Link>
+                                                            </NavLink>
                                                         </li>
                                                     );
                                                 })}

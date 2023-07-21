@@ -38,11 +38,18 @@ function ActionProfile() {
                     content={
                         <div className=" z-10 min-w-[170px] overflow-hidden rounded-[10px] bg-white shadow-xl">
                             <ul>
-                                {profile?.fullName && (
+                                {isAuthenticated && profile && profile.role !== "0001" && (
                                     <li className="cursor-pointer text-[14px]  text-gray-500 hover:bg-slate-200">
                                         <a href={path.client.profile} className="block px-3 py-2   hover:bg-slate-200">
                                             {" "}
                                             {profile?.fullName}{" "}
+                                        </a>
+                                    </li>
+                                )}
+                                {isAuthenticated && profile && profile.role === "0001" && (
+                                    <li className="cursor-pointer text-[14px]  text-gray-500 hover:bg-slate-200">
+                                        <a href={path.server.home} className="block px-3 py-2   hover:bg-slate-200">
+                                            Admin
                                         </a>
                                     </li>
                                 )}
@@ -61,6 +68,36 @@ function ActionProfile() {
                                     </li>
                                 )}
 
+                                {isAuthenticated && profile && (profile.role === "0002" || profile.role === "0003") ? (
+                                    <>
+                                        <li className="cursor-pointer text-[14px] text-gray-500 hover:bg-slate-200">
+                                            <a href={path.client.order} className="block px-3 py-2  hover:bg-slate-200">
+                                                {" "}
+                                                Đơn mua
+                                            </a>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                                {isAuthenticated && profile && profile.role === "0003" ? (
+                                    <>
+                                        <li className="cursor-pointer text-[14px] text-gray-500 hover:bg-slate-200">
+                                            <a
+                                                href={path.client.registerShop}
+                                                className="block px-3 py-2  hover:bg-slate-200"
+                                            >
+                                                {" "}
+                                                Trở thành người bán
+                                            </a>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                                <li className="cursor-pointer text-[14px]  text-gray-500 hover:bg-slate-200">
+                                    <span className="block px-3 py-2   hover:bg-slate-200"> Language</span>
+                                </li>
                                 {isAuthenticated && (
                                     <>
                                         <li
@@ -69,17 +106,8 @@ function ActionProfile() {
                                         >
                                             <span className="block px-3 py-2  hover:bg-slate-200"> Đăng xuất</span>
                                         </li>
-                                        <li className="cursor-pointer text-[14px] text-gray-500 hover:bg-slate-200">
-                                            <a href={path.client.order} className="block px-3 py-2  hover:bg-slate-200">
-                                                {" "}
-                                                Đơn mua
-                                            </a>
-                                        </li>
                                     </>
                                 )}
-                                <li className="cursor-pointer text-[14px]  text-gray-500 hover:bg-slate-200">
-                                    <span className="block px-3 py-2   hover:bg-slate-200"> Language</span>
-                                </li>
                             </ul>
                         </div>
                     }

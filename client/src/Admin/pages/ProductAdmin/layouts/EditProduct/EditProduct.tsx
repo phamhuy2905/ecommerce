@@ -32,7 +32,7 @@ function EditProduct({ setIsOpenModal }: { setIsOpenModal: React.Dispatch<React.
         defaultValues: {
             productBrand: productDetail.productBrand,
             productName: productDetail.productName,
-            productType: productDetail.productName,
+            productType: productDetail.productType,
             productQuantity: productDetail.productQuantity,
             productPrice: productDetail.productPrice,
             productDescription: productDetail.productDescription,

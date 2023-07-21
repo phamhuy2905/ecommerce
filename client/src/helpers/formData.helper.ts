@@ -22,7 +22,7 @@ const formDataV2 = (form: FormData, data: any, namespace?: string) => {
         const key = namespace ? `${namespace}[${property}]` : property;
         if (Array.isArray(data[property]) && data[property].length > 0) {
             form.delete(key);
-            data[property].forEach((value: any) => form.append(key, value));
+            data[property].forEach((value: any) => form.append(`${key}`, value));
         } else if (typeof data[property] === "string" || typeof data[property] === "number") {
             form.set(key, data[property]);
         } else {

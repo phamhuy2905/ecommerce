@@ -32,3 +32,12 @@ export const updateProfile = async (data: any) => {
     });
     return profile.data;
 };
+
+export const registerShop = async (data: any) => {
+    const profile = await http.instance.post<ProfileResponseType>("auth/registerShop", data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+    return profile.data;
+};

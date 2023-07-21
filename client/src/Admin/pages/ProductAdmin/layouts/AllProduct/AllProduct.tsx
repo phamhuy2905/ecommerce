@@ -63,7 +63,6 @@ function AllProduct() {
                             </table>
 
                             {products.length ? (
-                                // <Pagination   />
                                 <Paginate pages={page} currentPage={query.page || 1} />
                             ) : (
                                 <Skeleton baseColor="#1f2937" count={20} />

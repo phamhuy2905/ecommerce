@@ -4,7 +4,7 @@ export interface ProfileType {
     _id: string;
     fullName: string;
     email: string;
-    role: string;
+    role: "0001" | "0002" | "0003";
     address?: string;
     address2?: string;
     phoneNumber?: string | number;

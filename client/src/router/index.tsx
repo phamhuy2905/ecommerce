@@ -5,6 +5,7 @@ const Home = lazy(() => import("../pages/Home"));
 const Login = lazy(() => import("../pages/Login"));
 const Register = lazy(() => import("../pages/Register"));
 const Profile = lazy(() => import("../pages/Profile"));
+const RegisterShop = lazy(() => import("../pages/RegisterShop"));
 const ShopGrid = lazy(() => import("../pages/ShopGrid"));
 const ProductDetail = lazy(() => import("../pages/ProductDetail"));
 const Cart = lazy(() => import("../pages/Cart"));
@@ -19,6 +20,10 @@ import HomeAdmin from "../Admin/pages/HomeAdmin";
 import ProductAdmin from "../Admin/pages/ProductAdmin";
 import DefaultLayoutAdmin from "../Admin/layouts/DefaultLayoutAdmin";
 import AddProduct from "../Admin/pages/AddProduct";
+import { path } from "../helpers/path.helper";
+import OrderAdmin from "../Admin/pages/OrderAdmin";
+import OrderAdminDetail from "../Admin/pages/OrderAdminDetail";
+import OrderAdminPending from "../Admin/pages/OrderAdminPending/OrderAdminPending";
 
 function ProtectedRoute() {
     const { isAuthenticated } = useAuthContext();
@@ -32,6 +37,14 @@ function RejectedRoute() {
 function AdminRoute() {
     const { isAuthenticated, profile } = useAuthContext();
     return isAuthenticated && profile?.role === "0001" ? <Outlet /> : <Navigate to="/error" />;
+}
+function ShopRoute() {
+    const { isAuthenticated, profile } = useAuthContext();
+    return isAuthenticated && profile?.role === "0002" ? <Outlet /> : <Navigate to="/" />;
+}
+function UserRoute() {
+    const { isAuthenticated, profile } = useAuthContext();
+    return isAuthenticated && profile?.role === "0003" ? <Outlet /> : <Navigate to="/" />;
 }
 
 function useRoutesElement() {
@@ -113,10 +126,24 @@ function useRoutesElement() {
         },
         {
             path: "/",
+            element: <UserRoute />,
+            children: [
+                {
+                    path: path.client.registerShop,
+                    element: (
+                        <DefaultLayout>
+                            <RegisterShop />
+                        </DefaultLayout>
+                    ),
+                },
+            ],
+        },
+        {
+            path: "/",
             element: <AdminRoute />,
             children: [
                 {
-                    path: "/admin",
+                    path: path.server.home,
                     element: (
                         <DefaultLayoutAdmin>
                             <HomeAdmin />
@@ -124,7 +151,7 @@ function useRoutesElement() {
                     ),
                 },
                 {
-                    path: "/admin/product",
+                    path: path.server.product.all,
                     element: (
                         <DefaultLayoutAdmin>
                             <ProductAdmin />
@@ -132,7 +159,31 @@ function useRoutesElement() {
                     ),
                 },
                 {
-                    path: "/admin/add-product",
+                    path: path.server.order.all,
+                    element: (
+                        <DefaultLayoutAdmin>
+                            <OrderAdmin />
+                        </DefaultLayoutAdmin>
+                    ),
+                },
+                {
+                    path: path.server.order.detail,
+                    element: (
+                        <DefaultLayoutAdmin>
+                            <OrderAdminDetail />
+                        </DefaultLayoutAdmin>
+                    ),
+                },
+                {
+                    path: path.server.order.pending,
+                    element: (
+                        <DefaultLayoutAdmin>
+                            <OrderAdminPending />
+                        </DefaultLayoutAdmin>
+                    ),
+                },
+                {
+                    path: path.server.product.add,
                     element: (
                         <DefaultLayoutAdmin>
                             <AddProduct />

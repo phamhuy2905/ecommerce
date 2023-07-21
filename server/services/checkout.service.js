@@ -2,8 +2,8 @@ const { del } = require("../helper/redis");
 const Address = require("../models/address.model");
 const Order = require("../models/order.model");
 const { incrDiscount } = require("../repositories/discont.repo");
-const { incrInventory } = require("../repositories/inventory.repo");
-const { checkProductSever, incrProduct } = require("../repositories/product.repo");
+const { incrInventory, reservationInventory } = require("../repositories/inventory.repo");
+const { checkProductSever, incrProduct, reservationProduct } = require("../repositories/product.repo");
 const { BadRequestError } = require("../responPhrase/errorResponse");
 const ApiFeatured = require("../utils/apiFeatured");
 const { inventoryLock } = require("./redis.service");
@@ -92,16 +92,16 @@ class CheckOutSerive {
         return createdOrder;
     };
 
-    static async deleteProductOrderSchema({ shopId, reasonCancel, orderStatus, idOrder }) {
+    static async cancelOrderbyAdmin({ shopId, reasonCancel, idOrder }) {
         const order = await Order.findOneAndUpdate(
             {
+                _id: idOrder,
                 "shopOrders.shopId": shopId,
             },
             {
                 $set: {
-                    "shopOrders.isPublish": false,
-                    "shopOrders.reasonCancel": reasonCancel,
-                    "shopOrders.$.orderStatus": orderStatus,
+                    "shopOrders.$.reasonCancel": reasonCancel,
+                    "shopOrders.$.orderStatus": "cancel_by_admin",
                 },
             },
             {
@@ -109,16 +109,187 @@ class CheckOutSerive {
             }
         );
         if (!order) throw new BadRequestError("Something wronggg!");
-        const itemShops = order.shopOrders.find((val) => val.shopId === shopId);
-        Promise.all(
+        const itemShops = order.shopOrders.find((val) => val.shopId == shopId);
+
+        await Promise.all(
             itemShops.itemProducts.map(async (val) => {
                 await incrInventory({ productId: val.productId, quantity: val.quantity });
                 await incrProduct({ productId: val.productId, quantity: val.quantity });
-                await incrDiscount({ discountCode: val.discountCode, userId: order.userId });
             })
         );
 
         return await Order.findById(idOrder).lean();
+    }
+
+    static async cancelOrderbyUser({ shopId, reasonCancel, idOrder }) {
+        const order = await Order.findOneAndUpdate(
+            {
+                _id: idOrder,
+                "shopOrders.shopId": shopId,
+                "shopOrders.orderStatus": "pending",
+            },
+            {
+                $set: {
+                    "shopOrders.$.reasonCancel": reasonCancel,
+                    "shopOrders.$.orderStatus": "cancel_by_user",
+                },
+            },
+            {
+                new: true,
+            }
+        );
+        if (!order) throw new BadRequestError("Something wronggg!");
+        const itemShops = order.shopOrders.find((val) => val.shopId == shopId);
+
+        await Promise.all(
+            itemShops.itemProducts.map(async (val) => {
+                await incrInventory({ productId: val.productId, quantity: val.quantity });
+                await incrProduct({ productId: val.productId, quantity: val.quantity });
+            })
+        );
+        return await Order.findById(idOrder).lean();
+    }
+
+    static async requestCancelByUser({ shopId, idOrder }) {
+        const order = await Order.findOneAndUpdate(
+            {
+                _id: idOrder,
+                "shopOrders.shopId": shopId,
+                "shopOrders.orderStatus": "confirmed",
+            },
+            {
+                $set: {
+                    "shopOrders.$.requestCancel": true,
+                },
+            },
+            {
+                new: true,
+            }
+        );
+        return order;
+    }
+    static async cancelOrderbyShop({ shopId, reasonCancel, idOrder }) {
+        const order = await Order.findOneAndUpdate(
+            [
+                {
+                    _id: idOrder,
+                    "shopOrders.shopId": shopId,
+                    "shopOrders.orderStatus": "pending",
+                },
+                {
+                    _id: idOrder,
+                    "shopOrders.shopId": shopId,
+                    "shopOrders.orderStatus": "confirmed",
+                },
+            ],
+            {
+                $set: {
+                    "shopOrders.$.reasonCancel": reasonCancel,
+                    "shopOrders.$.orderStatus": "cancel_by_shop",
+                },
+            },
+            {
+                new: true,
+            }
+        );
+        if (!order) throw new BadRequestError("Something wronggg!");
+        const itemShops = order.shopOrders.find((val) => val.shopId == shopId);
+
+        await Promise.all(
+            itemShops.itemProducts.map(async (val) => {
+                await incrInventory({ productId: val.productId, quantity: val.quantity });
+                await incrProduct({ productId: val.productId, quantity: val.quantity });
+            })
+        );
+        return await Order.findById(idOrder).lean();
+    }
+    static async acceptCancelByShop({ shopId, idOrder }) {
+        const order = await Order.findOneAndUpdate(
+            {
+                _id: idOrder,
+                "shopOrders.shopId": shopId,
+                "shopOrders.requestCancel": true,
+            },
+
+            {
+                $set: {
+                    "shopOrders.$.reasonCancel": "User yêu cầu",
+                    "shopOrders.$.orderStatus": "cancel_by_shop",
+                },
+            },
+            {
+                new: true,
+            }
+        );
+        if (!order) throw new BadRequestError("Something wronggg!");
+        const itemShops = order.shopOrders.find((val) => val.shopId == shopId);
+
+        await Promise.all(
+            itemShops.itemProducts.map(async (val) => {
+                await incrInventory({ productId: val.productId, quantity: val.quantity });
+                await incrProduct({ productId: val.productId, quantity: val.quantity });
+            })
+        );
+        return await Order.findById(idOrder).lean();
+    }
+    static async acceptCancelByAdmin({ shopId, idOrder }) {
+        const order = await Order.findOneAndUpdate(
+            {
+                _id: idOrder,
+                "shopOrders.shopId": shopId,
+                "shopOrders.requestCancel": true,
+            },
+
+            {
+                $set: {
+                    "shopOrders.$.reasonCancel": "User yêu cầu",
+                    "shopOrders.$.orderStatus": "cancel_by_admin",
+                },
+            },
+            {
+                new: true,
+            }
+        );
+        if (!order) throw new BadRequestError("Something wronggg!");
+        const itemShops = order.shopOrders.find((val) => val.shopId == shopId);
+
+        await Promise.all(
+            itemShops.itemProducts.map(async (val) => {
+                await incrInventory({ productId: val.productId, quantity: val.quantity });
+                await incrProduct({ productId: val.productId, quantity: val.quantity });
+            })
+        );
+        return await Order.findById(idOrder).lean();
+    }
+
+    static async acceptOrder({ shopId, idOrder }) {
+        const order = await Order.findOneAndUpdate(
+            {
+                _id: idOrder,
+                "shopOrders.shopId": shopId,
+                "shopOrders.orderStatus": "pending",
+            },
+
+            {
+                $set: {
+                    "shopOrders.$.orderStatus": "confirmed",
+                },
+            },
+            {
+                new: true,
+            }
+        );
+        // if (!order) throw new BadRequestError("Something wronggg!");
+        // const itemShops = order.shopOrders.find((val) => val.shopId == shopId);
+
+        // await Promise.all(
+        //     itemShops.itemProducts.map(async (val) => {
+        //         await reservationInventory({ productId: val.productId, quantity: val.quantity });
+        //         await reservationProduct({ productId: val.productId, quantity: val.quantity });
+        //     })
+        // );
+        // return await Order.findById(idOrder).lean();
+        return order;
     }
 
     static getOrder = async (req, res, next) => {
@@ -130,8 +301,35 @@ class CheckOutSerive {
     static getAllOrder = async (req, res, next) => {
         const queryStr = { page: req.query.page };
         const data = await new ApiFeatured(Order.find(), queryStr).paginate();
-        const orders = await data.query.populate("shopOrders.shopId").populate("shopOrders.itemProducts.productId");
+        const orders = await data.query
+            .populate("shopOrders.shopId")
+            .populate("userId", "fullName avatar phoneNumber email")
+            .populate("shopOrders.itemProducts.productId");
         return { orders, page: orders.length ? data.page : { itemsPerPage: 12, totalItems: 0, totalPage: 0 } };
+    };
+    static getAllOrderPending = async (req, res, next) => {
+        const queryStr = { page: req.query.page };
+        const data = await new ApiFeatured(Order.find(), queryStr).paginate();
+        const orders = await data.query
+            .populate("shopOrders.shopId")
+            .populate("userId", "fullName avatar phoneNumber email")
+            .populate("shopOrders.itemProducts.productId")
+            .where("shopOrders.orderStatus", "pending");
+        return { orders, page: orders.length ? data.page : { itemsPerPage: 12, totalItems: 0, totalPage: 0 } };
+    };
+
+    static getOrderByShop = async (req) => {
+        const shopId = req.userId;
+        const data = await new ApiFeatured(Order.find({ "shopOrders.shopId": shopId }), queryStr).paginate();
+        return data;
+    };
+    static getOneOrderByAdmin = async (req) => {
+        const data = await Order.findById(req.params.id)
+            .populate("shopOrders.shopId")
+            .populate("userId", "fullName avatar phoneNumber email")
+            .populate("shopOrders.itemProducts.productId")
+            .lean();
+        return data;
     };
 }
 

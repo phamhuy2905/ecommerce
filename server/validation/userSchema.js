@@ -24,26 +24,19 @@ const loginUserChema = Joi.object({
 const registerShop = Joi.object({
     address: Joi.string()
         .required()
+        .min(8)
         .error((error) => customMessage(error, { fieldName: "New address", min: 8 })),
     address2: Joi.string()
-        .required()
+        .allow("")
         .error((error) => customMessage(error, { fieldName: "New address2", min: 8 })),
     phoneNumber: Joi.number()
         .required()
         .error((error) => customMessage(error, { fieldName: "New phoneNumber" })),
+    fullName: Joi.string()
+        .min(3)
+        .error((error) => customMessage(error, { fieldName: "Full name", min: 3 })),
 });
 const updateProfile = Joi.object({
-    address: Joi.string()
-        .allow("")
-        .min(8)
-        .error((error) => customMessage(error, { fieldName: "address", min: 8 })),
-    address2: Joi.string()
-        .allow("")
-        .error((error) => customMessage(error, { fieldName: "address2", min: 8 })),
-    phoneNumber: Joi.number()
-        .allow("")
-        .min(10)
-        .error((error) => customMessage(error, { fieldName: "phoneNumber" })),
     fullName: Joi.string()
         .min(3)
         .error((error) => customMessage(error, { fieldName: "Full name", min: 3 })),

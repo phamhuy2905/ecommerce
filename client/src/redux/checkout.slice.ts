@@ -6,17 +6,20 @@ import {
     SuccessResponseRevireCheckout,
 } from "../types/checkout.type";
 import http from "../utils/http";
-import { SaveAddressType } from "../types/address.type";
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 
-type PendingAction = ReturnType<GenericAsyncThunk["pending"]>;
+// type PendingAction = ReturnType<GenericAsyncThunk["pending"]>;
+// type FulfilledAction = ReturnType<GenericAsyncThunk["fulfilled"]>;
 type RejectedAction = ReturnType<GenericAsyncThunk["rejected"]>;
-type FulfilledAction = ReturnType<GenericAsyncThunk["fulfilled"]>;
 
 export const postCheckoutReview = createAsyncThunk("checkout/review", async (data: any, _thunkApi) => {
-    const review = await http.instance.post<SuccessResponseRevireCheckout>("checkout", data);
-    return review.data.data;
+    try {
+        const review = await http.instance.post<SuccessResponseRevireCheckout>("checkout", data);
+        return review.data.data;
+    } catch (error: any) {
+        if (error.name === "AxiosError") return _thunkApi.rejectWithValue(error);
+    }
 });
 export const createOrder = createAsyncThunk("checkout/created", async (data: any, _thunkApi) => {
     try {
@@ -95,7 +98,7 @@ const discountSlice = createSlice({
     },
     extraReducers(builder) {
         builder.addCase(postCheckoutReview.fulfilled, (state, action) => {
-            state.shopOrders = action.payload.newShopOrders;
+            if (action.payload) state.shopOrders = action.payload.newShopOrders;
         });
         builder
             .addCase(createOrder.fulfilled, (state, action) => {})

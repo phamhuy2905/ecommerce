@@ -1,6 +1,6 @@
 const sharp = require("sharp");
 
-const saveOneImage = ({ width, height, file, name, path }) => {
+const saveOneImage = async ({ width, height, file, name, path }) => {
     const originalExtensionName = `assets/${path}/${name}${Date.now()}.png`;
     sharp(file.buffer)
         .resize(width, height)
@@ -9,7 +9,7 @@ const saveOneImage = ({ width, height, file, name, path }) => {
     return __dirPath + originalExtensionName;
 };
 
-const saveImages = ({ width, height, name, files = [], path }) => {
+const saveImages = async ({ width, height, name, files = [], path }) => {
     const data = [];
     files.forEach((val, index) => {
         const originalExtensionName = `assets/${path}/${name}${index + 1}${
