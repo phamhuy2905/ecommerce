@@ -1,5 +1,5 @@
-const { createMessage, getMessage } = require("../repositories/message.repo");
-const { getLatestMessage, createLatestMessage } = require("../repositories/latest.repo");
+const { createMessage, getMessage } = require("../models/repositories/message.repo");
+const { getLatestMessage, createLatestMessage } = require("../models/repositories/latest.repo");
 class ChatService {
     static createChat = async (req, res, next) => {
         const { recevierId, message } = req.body;

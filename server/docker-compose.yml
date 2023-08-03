@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+    node:
+        container_name: ecommerce-rest-api
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        ports:
+            - 3001:3001
+        volumes:
+            - .:/app
+        command: npm start

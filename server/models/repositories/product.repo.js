@@ -1,6 +1,6 @@
-const { Product, Electronic, Clothing } = require("../models/product.model");
-const Discount = require("../models/discout.model");
-const { BadRequestError } = require("../responPhrase/errorResponse");
+const { Product, Electronic, Clothing } = require("../product.model");
+const Discount = require("../discout.model");
+const { BadRequestError } = require("../../responPhrase/errorResponse");
 
 const getProductDetail = async (id) => {
     const product = await Product.findById(id).lean();

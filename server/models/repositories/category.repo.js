@@ -1,4 +1,4 @@
-const Category = require("../models/category.model");
+const Category = require("../category.model");
 
 const findCategoryAndUpdate = async ({ name }) => {
     return await Category.findOneAndUpdate(

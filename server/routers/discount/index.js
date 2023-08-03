@@ -1,14 +1,14 @@
 const express = require("express");
-const DiscountController = require("../controllers/discount.controller");
-const { authentication } = require("../middlewares/authMiddleware");
+const DiscountController = require("../../controllers/discount.controller");
+const { authentication } = require("../../middlewares/authMiddleware");
 const {
     createDiscount,
     updateDiscount,
     updatePublishDiscount,
     getDiscount,
-} = require("../validation/discoun.validation");
-const validator = require("../middlewares/validator");
-const { objectIdSchema } = require("../validation/customValdation");
+} = require("../../validation/discoun.validation");
+const validator = require("../../middlewares/validator");
+const { objectIdSchema } = require("../../validation/customValdation");
 const router = express.Router();
 
 router.get("/:discountShop", validator(getDiscount, "params"), DiscountController.getDiscount);

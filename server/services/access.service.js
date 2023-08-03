@@ -13,7 +13,7 @@ const { removeInvalidFields } = require("../utils/nestedObj");
 const { validateCreatedOneImage } = require("../validation/image.validation");
 const { saveOneImage } = require("../utils/saveImage");
 
-class UserService {
+class AcccessService {
     static register = async (req, res, next) => {
         const body = removeField(req.body, "role", "avatar");
         const foundUser = await User.findOne({ email: body.email }).lean();
@@ -131,4 +131,4 @@ class UserService {
     };
 }
 
-module.exports = UserService;
+module.exports = AcccessService;

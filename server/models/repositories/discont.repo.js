@@ -1,4 +1,4 @@
-const Discount = require("../models/discout.model");
+const Discount = require("../discout.model");
 
 const incrDiscount = async ({ discountCode, userId }) => {
     return await Discount.findOneAndUpdate(

@@ -1,6 +1,6 @@
 const { setnx, expires } = require("../helper/redis");
-const { reservationInventory } = require("../repositories/inventory.repo");
-const { reservationProduct } = require("../repositories/product.repo");
+const { reservationInventory } = require("../models/repositories/inventory.repo");
+const { reservationProduct } = require("../models/repositories/product.repo");
 // const redis = require("redis");
 // const { promisify } = require("util");
 

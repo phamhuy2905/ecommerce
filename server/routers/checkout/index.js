@@ -1,9 +1,9 @@
 const express = require("express");
-const CheckOutController = require("../controllers/checkout.controller");
-const { authentication, authenticationRole } = require("../middlewares/authMiddleware");
-const validator = require("../middlewares/validator");
-const { checkOutSchema, cancelOrder, createOrder } = require("../validation/order.validation");
-const { objectIdSchema } = require("../validation/customValdation");
+const CheckOutController = require("../../controllers/checkout.controller");
+const { authentication, authenticationRole } = require("../../middlewares/authMiddleware");
+const validator = require("../../middlewares/validator");
+const { checkOutSchema, cancelOrder, createOrder } = require("../../validation/order.validation");
+const { objectIdSchema } = require("../../validation/customValdation");
 const router = express.Router();
 
 router.use(authentication);

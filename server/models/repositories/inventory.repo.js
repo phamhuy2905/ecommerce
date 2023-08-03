@@ -1,4 +1,4 @@
-const Inventory = require("../models/inventory.model");
+const Inventory = require("../inventory.model");
 
 const createInventory = async ({ inventoryShop, inventoryProduct, inventoryStock }) => {
     const inventory = await Inventory.create({

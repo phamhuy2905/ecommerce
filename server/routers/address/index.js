@@ -1,8 +1,8 @@
 const express = require("express");
-const validator = require("../middlewares/validator");
-const AddressController = require("../controllers/address.controller");
-const { authentication } = require("../middlewares/authMiddleware");
-const { createAddress } = require("../validation/address.validation");
+const validator = require("../../middlewares/validator");
+const AddressController = require("../../controllers/address.controller");
+const { authentication } = require("../../middlewares/authMiddleware");
+const { createAddress } = require("../../validation/address.validation");
 const router = express.Router();
 
 router.use(authentication);

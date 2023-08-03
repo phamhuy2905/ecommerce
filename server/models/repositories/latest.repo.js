@@ -1,4 +1,4 @@
-const LatestMessage = require("../models/latest.model");
+const LatestMessage = require("../latest.model");
 
 const updateLatestMessage = async ({ senderId, recevierId, message, latestTime }) => {
     const filter = [

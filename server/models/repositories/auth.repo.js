@@ -1,5 +1,5 @@
-const KeyToken = require("../models/keyToken.model");
-const User = require("../models/user.model");
+const KeyToken = require("../keyToken.model");
+const User = require("../user.model");
 
 const findUserById = async (id) => {
     return await User.findById(id).select("-createdAt -updatedAt -__v").lean();

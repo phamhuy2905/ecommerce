@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { UnAuthorization, ForbidentError, BadRequestError } = require("../responPhrase/errorResponse");
 const asyncHandel = require("./asynHandel");
-const { findUserById } = require("../repositories/auth.repo");
+const { findUserById } = require("../models/repositories/auth.repo");
 const { findKeyTokenByRefreshToken } = require("../services/keyToken.service");
 
 const checkAuth = (req) => {

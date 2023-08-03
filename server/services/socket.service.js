@@ -1,5 +1,5 @@
-const { createMessage } = require("../repositories/message.repo");
-const { createLatestMessage } = require("../repositories/latest.repo");
+const { createMessage } = require("../models/repositories/message.repo");
+const { createLatestMessage } = require("../models/repositories/latest.repo");
 class SocketService {
     static connect(socket) {
         socket.on("message", async (data) => {

@@ -1,9 +1,9 @@
 const { del } = require("../helper/redis");
 const Address = require("../models/address.model");
 const Order = require("../models/order.model");
-const { incrDiscount } = require("../repositories/discont.repo");
-const { incrInventory, reservationInventory } = require("../repositories/inventory.repo");
-const { checkProductSever, incrProduct, reservationProduct } = require("../repositories/product.repo");
+const { incrDiscount } = require("../models/repositories/discont.repo");
+const { incrInventory, reservationInventory } = require("../models/repositories/inventory.repo");
+const { checkProductSever, incrProduct, reservationProduct } = require("../models/repositories/product.repo");
 const { BadRequestError } = require("../responPhrase/errorResponse");
 const ApiFeatured = require("../utils/apiFeatured");
 const { inventoryLock } = require("./redis.service");

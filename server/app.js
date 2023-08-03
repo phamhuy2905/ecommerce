@@ -7,17 +7,11 @@ const morgan = require("morgan");
 const cookieParse = require("cookie-parser");
 const app = require("./server");
 const { globalMiddleware } = require("./middlewares/globalMiddleware");
+const notFountRouter = require("./middlewares/notFoundRouter");
+global.__dirPath = "http://localhost:3001/";
 
-/* router */
-const userRouter = require("./routers/user.router");
-const productRouter = require("./routers/produc.router");
-const discountRouter = require("./routers/discount.router");
-const checkoutRouter = require("./routers/checkout.router");
-const staticRouter = require("./routers/static.route");
-const chatRouter = require("./routers/chat.route");
-const addressRouter = require("./routers/address.router");
-/* router */
-
+require("./factories");
+//
 app.use(
     cors({
         credentials: true,
@@ -25,30 +19,12 @@ app.use(
         optionsSuccessStatus: 200,
     })
 );
-
 app.use("/assets", express.static("./assets"));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(compression());
 app.use(helmet());
 app.use(cookieParse());
-global.__dirPath = "http://localhost:3001/";
-
-/* router */
-app.use("/api/v1/auth", userRouter);
-app.use("/api/v1/product", productRouter);
-app.use("/api/v1/discount", discountRouter);
-app.use("/api/v1/checkout", checkoutRouter);
-app.use("/api/v1/static", staticRouter);
-app.use("/api/v1/chat", chatRouter);
-app.use("/api/v1/address", addressRouter);
-/* router */
-
+app.use("/", require("./routers"));
 app.use(globalMiddleware);
-app.use("/", (req, res, next) => {
-    res.status(400).json({
-        status: 400,
-        success: false,
-        message: "Router not found",
-    });
-});
+app.use("/", notFountRouter);

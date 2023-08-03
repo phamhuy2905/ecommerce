@@ -1,11 +1,11 @@
 const express = require("express");
-const ProducController = require("../controllers/product.controller");
-const { authentication, authenticationRole } = require("../middlewares/authMiddleware");
-const { createdProductSchema, updateProductSchema } = require("../validation/productSchema");
-const validator = require("../middlewares/validator");
-const { objectIdSchema } = require("../validation/customValdation");
-const upload = require("../middlewares/multer.middleware");
-const parseJsonMiddleware = require("../middlewares/parseJsonMiddleware");
+const ProducController = require("../../controllers/product.controller");
+const { authentication, authenticationRole } = require("../../middlewares/authMiddleware");
+const { createdProductSchema, updateProductSchema } = require("../../validation/productSchema");
+const validator = require("../../middlewares/validator");
+const { objectIdSchema } = require("../../validation/customValdation");
+const upload = require("../../middlewares/multer.middleware");
+const parseJsonMiddleware = require("../../middlewares/parseJsonMiddleware");
 const router = express.Router();
 
 router.get("/", ProducController.getProduct);
