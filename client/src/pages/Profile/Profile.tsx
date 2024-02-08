@@ -19,7 +19,7 @@ const defaultValues: UpdateProfileType = {
 function Profile() {
     const [avatar, setAvatar] = useState<any>();
     const navigate = useNavigate();
-    const { setProfile, profile: profileAuth } = useAuthContext();
+    const { setProfile } = useAuthContext();
     const {
         formState: { errors },
         register,

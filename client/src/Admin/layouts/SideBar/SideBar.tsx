@@ -1,7 +1,7 @@
 import { Link, LinkProps, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { useState } from "react";
-import { AiOutlineHome, AiOutlineShoppingCart, AiOutlineUser, AiOutlineSetting } from "react-icons/ai";
+import { AiOutlineHome, AiOutlineShoppingCart, AiOutlineSetting } from "react-icons/ai";
 import { RxDot } from "react-icons/rx";
 import { BsChevronDown } from "react-icons/bs";
 import { HiOutlineDatabase } from "react-icons/hi";

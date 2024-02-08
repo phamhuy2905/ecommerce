@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearLocalCart, getLocalCart, setLocalCart } from "../helpers/local.helper";
 import { CartProductType, CartType, initTialStateType, UpdateCartAfterOrderType } from "../types/slice/cart.type";
 

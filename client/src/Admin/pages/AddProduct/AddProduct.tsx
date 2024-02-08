@@ -64,7 +64,7 @@ function AddProduct() {
                 toast.error(error || "Something wrong!!!");
             });
     });
-    const { data = [] } = useQuery({
+    useQuery({
         queryKey: ["categoryAdmin"],
         queryFn: getCategoryAdmin,
     });
