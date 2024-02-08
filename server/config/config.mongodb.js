@@ -1,3 +1,4 @@
+require("dotenv").config({ path: __dirname + "/config.env" });
 const dev = {
     app: {
         port: process.env.DEV_APP_PORT,
@@ -6,6 +7,10 @@ const dev = {
         name: process.env.DEV_DB_NAME,
         port: process.env.DEV_DB_PORT,
         host: process.env.DEV_DB_HOST,
+    },
+    redis: {
+        port: process.env.DEV_REDIS_PORT,
+        host: process.env.DEV_REDIS_HOST,
     },
 };
 
@@ -17,6 +22,10 @@ const pro = {
         name: process.env.PRO_DB_NAME,
         port: process.env.PRO_DB_PORT,
         host: process.env.PRO_DB_HOST,
+    },
+    redis: {
+        port: process.env.PRO_REDIS_PORT,
+        host: process.env.PRO_REDIS_HOST,
     },
 };
 

@@ -2,7 +2,6 @@ require("./dbs/init.mongo");
 const express = require("express");
 const { app: appConfig } = require("./config/config.mongodb");
 const app = express();
-//
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -10,7 +9,7 @@ const SocketService = require("./services/socket.service");
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "*",
     },
 });
 global._io = io;
