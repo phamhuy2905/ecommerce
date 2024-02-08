@@ -1,5 +1,6 @@
 const redis = require("redis");
-const client = redis.createClient();
+const { redis: redisConfig } = require("../config/config.mongodb");
+const client = redis.createClient(redisConfig.port, redisConfig.host);
 
 const get = async (key) => {
     return new Promise((resolve, reject) => {
