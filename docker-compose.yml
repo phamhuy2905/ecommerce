@@ -1,0 +1,87 @@
+version: "3"
+
+services:
+    backend:
+        build:
+            context: ./server
+        container_name: backend-nodejs
+        image: backend:latest
+        ports:
+            - 3001:3001
+            - 4000:4000
+        depends_on:
+            - mongodb
+        networks:
+            shop-net:
+                ipv4_address: 192.168.0.2
+        env_file:
+            - ./server/config/config.env
+        command: ["npm", "start"]
+
+    mongodb:
+        image: mongo:latest
+        container_name: mongo-db
+        ports:
+            - 27017:27017
+        restart: always
+        networks:
+            shop-net:
+                ipv4_address: 192.168.0.3
+        volumes:
+            - mongo_data:/data/db
+
+    redis:
+        image: redis:latest
+        container_name: redis-db
+        ports:
+            - 6379:6379
+        restart: always
+        networks:
+            shop-net:
+                ipv4_address: 192.168.0.4
+    frontend:
+        image: frontend:latest
+        container_name: frontend-reactjs
+        build:
+            context: ./client
+        ports:
+            - 3000:3000
+        depends_on:
+            - mongodb
+            - backend
+        networks:
+            shop-net:
+                ipv4_address: 192.168.0.5
+        env_file:
+            - ./client/config/config.env
+        command: ["npm", "start"]
+
+    webserver:
+        build:
+            context: ./nginx
+        image: nginx-webserver:latest
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./nginx/upstream.conf:/etc/nginx/upstream.conf
+        ports:
+            - 3050:80
+        restart: always
+        depends_on:
+            - backend
+            - frontend
+            - mongodb
+        networks:
+            - shop-net
+
+networks:
+    shop-net:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: "192.168.0.0/24"
+                  gateway: "192.168.0.1"
+
+volumes:
+    mongo_data:
+        name: my_mongo

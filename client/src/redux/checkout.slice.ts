@@ -101,10 +101,10 @@ const discountSlice = createSlice({
             if (action.payload) state.shopOrders = action.payload.newShopOrders;
         });
         builder
-            .addCase(createOrder.fulfilled, (state, action) => {})
+            .addCase(createOrder.fulfilled, (_state, _action) => {})
             .addMatcher<RejectedAction>(
                 (action) => action.type.endsWith("/rejected"),
-                (state, action) => {}
+                (_state, _action) => {}
             );
     },
 });

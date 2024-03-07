@@ -15,13 +15,15 @@ class http {
     private accessToken: string;
     profile: UserType;
     refreshToken: Promise<AxiosResponse<AuthResponseLogin, any>> | null;
+    private PORT: any = import.meta.env.VITE_API_PORT;
+    private HOST: any = import.meta.env.VITE_API_HOST;
 
     constructor() {
         this.refreshToken = null;
         this.accessToken = getTokenLocal();
         this.profile = getProfileLocal();
         this.instance = axios.create({
-            baseURL: "http://localhost:3001/api/v1/",
+            baseURL: `http://${this.HOST}:${this.PORT}/api/v1/`,
             headers: {
                 "Content-Type": "application/json",
             },

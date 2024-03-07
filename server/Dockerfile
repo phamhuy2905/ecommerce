@@ -1,13 +1,13 @@
-FROM node:18.15.0-alpine
+FROM node:18-alpine 
 
-WORKDIR /app
+WORKDIR /app/backend-nodejs
 
-COPY ["package.json", "package-lock.json*", "./"]
-
-RUN npm install
+COPY package-lock.json ./
+COPY package.json ./
 
 COPY . .
 
-EXPOSE 3001
+RUN npm install
 
-CMD ["npm", "run", "start"]
+
+CMD [ "npm", "start" ]

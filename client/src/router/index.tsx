@@ -38,10 +38,6 @@ function AdminRoute() {
     const { isAuthenticated, profile } = useAuthContext();
     return isAuthenticated && profile?.role === "0001" ? <Outlet /> : <Navigate to="/error" />;
 }
-function ShopRoute() {
-    const { isAuthenticated, profile } = useAuthContext();
-    return isAuthenticated && profile?.role === "0002" ? <Outlet /> : <Navigate to="/" />;
-}
 function UserRoute() {
     const { isAuthenticated, profile } = useAuthContext();
     return isAuthenticated && profile?.role === "0003" ? <Outlet /> : <Navigate to="/" />;

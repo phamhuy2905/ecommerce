@@ -17,23 +17,23 @@ function ProductItem({ product, bg = "white", border = true }: PropType) {
     const loopAverage = Array(roundAverage).fill(null);
 
     return (
-        <div className={cx(` border-[1px] rounded-[10px] ${border ? "border-gray-200" : ""}`, { wrapper: true })}>
+        <div className={cx(` rounded-[10px] border-[1px] ${border ? "border-gray-200" : ""}`, { wrapper: true })}>
             <a
-                className={`px-2  w-[260xp] h-[315px] overflow-hidden relative cursor-pointer`}
+                className={`relative  h-[315px] w-[260xp] cursor-pointer overflow-hidden px-2`}
                 style={{ backgroundColor: bg }}
                 href={`${path.client.detail}/${product._id}`}
             >
                 <img
                     id="image"
-                    className={cx("w-full h-full object-cover", { image: true })}
+                    className={cx("h-full w-full object-cover", { image: true })}
                     data-src={product.productThumbnail}
                     alt="Product"
                 />
             </a>
-            <div className={`px-2  flex flex-col py-3  ${border ? "border-t-[1px] border-gray-300" : ""}`}>
+            <div className={`flex  flex-col px-2 py-3  ${border ? "border-t-[1px] border-gray-300" : ""}`}>
                 <p className="text-[14px] text-gray-600">{product.productType}</p>
-                <h4 className="text-[17px] text-gray-800 my-2">{product.productName}</h4>
-                <p className=" mb-4 relative">
+                <h4 className="my-2 text-[17px] text-gray-800">{product.productName}</h4>
+                <p className=" relative mb-4">
                     {loopAverage.map((_, index) => {
                         // const percen =
                         //     (index + 1) / product.ratingsAverage <= 1
@@ -48,9 +48,9 @@ function ProductItem({ product, bg = "white", border = true }: PropType) {
                                     left: `${index === 0 ? 0 : index * 15}px`,
                                 }}
                             >
-                                <AiFillStar className={`text-[15px] text-gray-500 absolute `} />
+                                <AiFillStar className={`absolute text-[15px] text-gray-500 `} />
                                 <AiFillStar
-                                    className={`text-[15px] text-orange-400 absolute  overflow-hidden`}
+                                    className={`absolute overflow-hidden text-[15px]  text-orange-400`}
                                     style={
                                         {
                                             // left: percen === 100 ? 0 + "%" : -percen + "%",
@@ -61,11 +61,11 @@ function ProductItem({ product, bg = "white", border = true }: PropType) {
                         );
                     })}
                 </p>
-                <p className="text-blue-500 text-[16px] ">{formatCoin(product.productPrice)}</p>
+                <p className="text-[16px] text-blue-500 ">{formatCoin(product.productPrice as number)}</p>
                 <div className="flex items-center justify-center">
                     <a
                         href={`${path.client.detail}/${product._id}`}
-                        className="bg-green-400 text-white text-[14px] py-1 px-5 rounded-[12px]"
+                        className="rounded-[12px] bg-green-400 px-5 py-1 text-[14px] text-white"
                     >
                         Xem sản phẩm
                     </a>
